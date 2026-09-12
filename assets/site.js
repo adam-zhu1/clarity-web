@@ -114,6 +114,19 @@
     e.preventDefault(); go();
   });
 
+  /* ============================================================ release facts, from GitHub's public API */
+  fetch('https://api.github.com/repos/s0hamjain/Clarity/releases/latest', { headers: { Accept: 'application/vnd.github+json' } })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (rel) {
+      if (!rel) return;
+      var dmg = (rel.assets || []).filter(function (a) { return a.name === 'Clarity.dmg'; })[0];
+      var ver = /^v?\d/.test(rel.tag_name) ? rel.tag_name.replace(/^v/, 'v') : (rel.name || rel.tag_name);
+      var parts = [ver];
+      if (dmg) parts.push(Math.round(dmg.size / 1048576) + ' MB');
+      parts.push('macOS 14 or later', 'Apple Silicon');
+      $('rel-note').textContent = parts.join(' \u00b7 ');
+    }).catch(function () {});
+
   /* ============================================================ boot */
   var start = viewFromPath(location.pathname);
   history.replaceState({ v: start }, '', location.pathname);
