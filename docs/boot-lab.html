@@ -314,10 +314,35 @@ body {
          --mr: calc(var(--lens-d) * 1.48) }
 }
 
+
+/* ============================================================ boot 8 · pursuit */
+/* Boot 7's idea with the path rewritten. The glass chases a target that jumps
+ * three times (past the word, back past it, onto it), so its velocity is never
+ * discontinuous: it slows as it nears each target, which is the hesitation,
+ * and its tilt is read off its own velocity, so it leans into every turn.
+ * The magnifier is a clipped circle moved by transform with an inverse-shifted
+ * copy of the word inside: no mask recut, no blur animating while it hunts. */
+.mag8 { position: fixed; left: 50%; top: var(--lens-y, 50%);
+  width: calc(var(--lens-d) * .781); height: calc(var(--lens-d) * .781);
+  margin: calc(var(--lens-d) * -.3905) 0 0 calc(var(--lens-d) * -.3905);
+  border-radius: 50%; overflow: hidden; opacity: 0; pointer-events: none;
+  transform: translate(var(--mx), var(--my)); will-change: transform; }
+.mag8-in { position: absolute; left: 50%; top: 50%; width: 0; height: 0;
+  transform: translate(calc(-1 * var(--mx)), calc(-1 * var(--my))) scale(var(--mag)); will-change: transform; }
+.mag8-wm { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); white-space: nowrap; margin: 0; opacity: 1; filter: none; }
+.boot-8 .mag8 { opacity: var(--m8op, 1); }
+.boot-8 .lens { opacity: var(--mop); transform: translate(var(--mx), var(--my)) rotate(var(--mrot)) scale(var(--mscale)); }
+.boot-8 h1.wordmark { opacity: var(--wm-ghost); filter: blur(15px); }
+.boot-8.locked h1.wordmark { animation: unblur-wm 420ms var(--ease-out) both; }
+.boot-8.locked .tagline { animation: focus-in 520ms var(--ease-out) 80ms both; }
+.boot-8.locked .dl { animation: rise 500ms var(--ease-out) 180ms both; }
+.boot-8.locked .fine, .boot-8.locked .nav { animation: fade-in 460ms var(--ease-out) 280ms both; }
+.boot-8:not(.locked) .tagline, .boot-8:not(.locked) .dl, .boot-8:not(.locked) .fine, .boot-8:not(.locked) .nav { opacity: 0; }
+
 /* ============================================================ reduced motion */
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 200ms !important; animation-delay: 0ms !important; }
-  .flyer, .lens, .glass, .ring, .flash, .dim, .caps, .sel, .sheen, .wm-sharp { display: none !important; }
+  .flyer, .lens, .glass, .ring, .flash, .dim, .caps, .sel, .sheen, .wm-sharp, .mag8 { display: none !important; }
   [class*="boot-"] .page { animation: fade-in 200ms both !important; }
 }
 
@@ -376,6 +401,7 @@ body {
 <!-- boot layers -->
 <div class="glass" aria-hidden="true"></div>
 <div class="ring" aria-hidden="true"></div>
+<div class="mag8" aria-hidden="true"><div class="mag8-in"><span class="wordmark mag8-wm">Clarity</span></div></div>
 <div class="lens" aria-hidden="true"><span class="stick"></span><span class="rim"></span><span class="disc"></span></div>
 <div class="dim" aria-hidden="true"></div>
 <div class="flash" aria-hidden="true"></div>
@@ -406,6 +432,7 @@ body {
   <button data-boot="5" type="button">5</button>
   <button data-boot="6" type="button">6</button>
   <button data-boot="7" type="button">7</button>
+  <button data-boot="8" type="button">8</button>
   <span class="sep"></span>
   <button id="speed" type="button" title="length of the whole boot — s">2.4 s</button>
   <button id="theme" type="button">theme</button>
@@ -417,7 +444,7 @@ body {
  * boot class lands, and so nothing is parked invisible waiting on script. */
 (function () {
   var root = document.documentElement;
-  var NAMES = { 1: 'focus', 2: 'spin-land', 3: 'lens sweep', 4: 'through the glass', 5: 'capture', 6: 'ring draw', 7: 'search' };
+  var NAMES = { 1: 'focus', 2: 'spin-land', 3: 'lens sweep', 4: 'through the glass', 5: 'capture', 6: 'ring draw', 7: 'search', 8: 'pursuit' };
   var params = new URLSearchParams(location.search);
   var boot = params.get('boot') || localStorage.getItem('boot') || '1';
   var theme = params.get('theme') || localStorage.getItem('theme') || 'paper';
@@ -433,12 +460,57 @@ body {
     root.style.setProperty('--lens-y', (wm.top + wm.height / 2) + 'px');
   }
 
+
+  /* ---- boot 8: the pursuit, driven by a spring chase in JS. Times are on the
+   * 2.4 s base clock and scaled by the lab's speed like everything else. */
+  var hunt8 = { raf: 0 };
+  function stopHunt8() { if (hunt8.raf) cancelAnimationFrame(hunt8.raf); hunt8.raf = 0; root.classList.remove('locked'); }
+  function startHunt8() {
+    stopHunt8();
+    var reach = parseFloat(getComputedStyle(root).getPropertyValue('--reach')) || 840;
+    var scale = speed / 2.4;                         /* >1 = slower */
+    var x = -1.05 * reach, y = 12, vx = 0, vy = 0;
+    var rot = -6, mop = 0, mscale = .94, mag = 1.22, m8op = 1;
+    /* target schedule: [time s, tx, ty, omega, zeta] */
+    var plan = [
+      [0.00,  0.55 * reach,  -8, 6.0, 0.92],     /* glides past the word, slows on the far right */
+      [0.78, -0.24 * reach,   8, 6.5, 0.90],     /* sweeps back, goes a little too far left */
+      [1.48,  0,              0, 7.5, 1.05]      /* settles onto the word */
+    ];
+    var lockAt = 2.0, endAt = 2.45;
+    var t0 = performance.now(), last = t0, locked = false;
+    function set(n, v) { root.style.setProperty(n, v); }
+    set('--mx', x + 'px'); set('--my', y + 'px'); set('--mrot', rot + 'deg'); set('--mop', 0); set('--mscale', mscale); set('--mag', mag); set('--m8op', 1);
+    function frame(now) {
+      var t = (now - t0) / 1000 / scale;
+      var dt = Math.min(0.032, (now - last) / 1000 / scale); last = now;
+      var seg = plan[0]; for (var i = 0; i < plan.length; i++) if (t >= plan[i][0]) seg = plan[i];
+      var w = seg[3], z = seg[4], k = w * w, c = 2 * z * w;
+      vx += (k * (seg[1] - x) - c * vx) * dt; vy += (k * (seg[2] - y) - c * vy) * dt;
+      x += vx * dt; y += vy * dt;
+      /* lean into the direction of travel; smoothed so it never snaps */
+      var want = Math.max(-8, Math.min(8, vx / reach * 4.2));
+      rot += (want - rot) * Math.min(1, dt * 9);
+      mop += ((t < lockAt ? 1 : 0) - mop) * Math.min(1, dt * (t < lockAt ? 6 : 5));
+      mscale += ((t < lockAt ? 1 : 1.5) - mscale) * Math.min(1, dt * (t < lockAt ? 5 : 4));
+      if (t >= lockAt) { m8op += (0 - m8op) * Math.min(1, dt * 7); mag += (1 - mag) * Math.min(1, dt * 6); }
+      if (t >= lockAt && !locked) { locked = true; root.classList.add('locked'); }
+      set('--mx', x.toFixed(2) + 'px'); set('--my', y.toFixed(2) + 'px');
+      set('--mrot', rot.toFixed(2) + 'deg'); set('--mop', mop.toFixed(3)); set('--mscale', mscale.toFixed(3));
+      set('--mag', mag.toFixed(3)); set('--m8op', m8op.toFixed(3));
+      if (t < endAt) hunt8.raf = requestAnimationFrame(frame);
+      else { hunt8.raf = 0; set('--mx', '0px'); set('--my', '0px'); set('--mrot', '0deg'); set('--mop', 0); set('--m8op', 0); set('--mag', 1); }
+    }
+    hunt8.raf = requestAnimationFrame(frame);
+  }
+
   function paint() {
     root.className = 'theme-' + theme + ' boot-' + boot;
     document.getElementById('name').textContent = boot + ' · ' + NAMES[boot];
     document.querySelectorAll('[data-boot]').forEach(function (b) {
       b.setAttribute('aria-pressed', b.dataset.boot === boot);
     });
+    if (boot === '8') startHunt8(); else stopHunt8();
   }
 
   /* Every boot is written at 2.4 s. Changing the speed scales the playback rate
