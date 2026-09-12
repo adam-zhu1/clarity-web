@@ -1,0 +1,59 @@
+/* Clarity identity tokens
+   Single source of truth for colour, type, radius and motion.
+   Referenced by the website and by brand/IDENTITY.md. The desktop app should
+   mirror these values in desktop/clarity/ui/shared/base.css. */
+
+:root {
+  /* ---- colour: sampled from the app icon */
+  --c-ink:        #0e141c;   /* ground · bottom of the icon's gradient */
+  --c-ink-2:      #141c26;   /* raised surface */
+  --c-ink-3:      #1b2531;   /* panel */
+  --c-slate:      #3a4553;   /* mid-tone of the icon square */
+  --c-haze:       #a9b4c3;   /* top-left of the icon square */
+  --c-mist:       #eaf0f4;   /* primary text on dark */
+  --c-mist-70:    rgba(234, 240, 244, 0.70);
+  --c-mist-44:    rgba(234, 240, 244, 0.44);
+  --c-line:       rgba(234, 240, 244, 0.10);
+  --c-line-2:     rgba(234, 240, 244, 0.20);
+  --c-mint:       #6fd1bd;   /* accent · the magnifier's handle. One button, one link. */
+  --c-mint-ink:   #0b1b18;   /* text on mint */
+  --c-lens:       #589da1;   /* glass · secondary, eyebrows, small labels */
+  --c-glass-hi:   #cff8e7;   /* glass highlight · math and emphasis on dark */
+  --c-danger:     #ff8a8a;
+
+  /* ---- light counterparts (documented; the site is dark by design) */
+  --c-paper:      #f3f6f8;
+  --c-paper-2:    #ffffff;
+  --c-ink-on-paper: #121b26;
+  --c-mint-on-paper: #3fb39b;
+  --c-lens-on-paper: #3d8d90;
+
+  /* ---- type */
+  --f-sans: "Geist", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "Geist Mono", "SF Mono", ui-monospace, Menlo, monospace;
+  --f-math: "STIX Two Text", "Times New Roman", serif;
+  --fs-body: 16px;
+  --fs-small: 14px;
+  --fs-micro: 12px;
+  --fs-h2: clamp(28px, 4vw, 40px);
+  --fs-wordmark: clamp(64px, 12vw, 128px);
+  --lh-body: 1.55;
+  --ls-display: -0.04em;
+  --ls-eyebrow: 0.08em;
+
+  /* ---- shape */
+  --r-panel: 12px;
+  --r-control: 10px;
+  --r-icon: 22.37%;         /* macOS icon corner ratio */
+
+  /* ---- motion */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);    /* things arriving */
+  --ease-in:  cubic-bezier(0.6, 0, 0.9, 0.4);    /* things leaving */
+  --ease-io:  cubic-bezier(0.65, 0, 0.35, 1);    /* things moving while on screen */
+  --ease-land: cubic-bezier(0.34, 1.25, 0.5, 1); /* the magnifier landing */
+  --t-tap: 120ms;       /* pressed states */
+  --t-hover: 180ms;     /* hover, focus, the app's spotlight box */
+  --t-enter: 420ms;     /* content arriving on a page */
+  --t-page: 560ms;      /* the icon's flight between pages */
+  --blur-focus: 14px;   /* start of any blur-to-focus */
+}
