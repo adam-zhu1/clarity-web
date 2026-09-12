@@ -1,0 +1,128 @@
+<title>Clarity v2 Storyboards</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=STIX+Two+Text:ital@1&display=swap">
+<style>
+:root {
+  --paper: #eef2f7; --paper-2: #ffffff; --paper-3: #e3e9f1;
+  --ink: #121b26; --ink-70: rgba(18,27,38,.72); --ink-45: rgba(18,27,38,.48); --line: rgba(18,27,38,.10); --line-2: rgba(18,27,38,.18);
+  --mint: #5cc6b0; --mint-deep: #2f9e8c; --mint-ink: #0b1b18; --lens: #3d8d90;
+  --sans: "Manrope", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif; --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--sans); padding-inline: clamp(16px, 4vw, 48px); padding-block: 0 72px; -webkit-font-smoothing: antialiased; }
+h1, h2, h3, p { margin: 0; } h1, h2, h3 { text-wrap: balance; letter-spacing: -.025em; }
+.wrap { max-width: 1120px; margin-inline: auto; }
+.top { display: flex; justify-content: space-between; align-items: center; padding-block: 18px; border-bottom: 1px solid var(--line); font-size: 14px; color: var(--ink-70); }
+.top b { color: var(--ink); font-weight: 700; }
+.intro { padding-block: 48px 36px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: end; border-bottom: 1px solid var(--line); }
+@media (max-width: 800px) { .intro { grid-template-columns: 1fr; } }
+.intro h1 { font-size: clamp(32px, 4.6vw, 52px); font-weight: 700; line-height: 1.02; letter-spacing: -.035em; }
+.intro p { margin-top: 14px; color: var(--ink-70); max-width: 56ch; }
+.sw { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; font-family: var(--mono); font-size: 11px; color: var(--ink-45); }
+.sw div { display: grid; gap: 6px; } .sw i { display: block; height: 44px; border-radius: 8px; border: 1px solid var(--line-2); }
+.type { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 14px; display: grid; gap: 4px; }
+.type .big { font-size: 40px; font-weight: 700; letter-spacing: -.035em; line-height: 1; }
+.type .body { color: var(--ink-70); font-size: 15px; }
+.type .m { font-family: var(--mono); font-size: 12px; color: var(--ink-45); }
+.section { padding-block: 56px; border-bottom: 1px solid var(--line); }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--lens); display: block; margin-bottom: 10px; }
+.h2 { font-size: clamp(26px, 3.4vw, 36px); font-weight: 700; line-height: 1.1; max-width: 26ch; }
+.lede { margin-top: 12px; max-width: 62ch; color: var(--ink-70); }
+.board { margin-top: 28px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 720px) { .board { grid-template-columns: repeat(2, 1fr); } }
+.frame { display: grid; gap: 8px; min-width: 0; }
+.art { aspect-ratio: 16 / 10; border-radius: 10px; border: 1px solid var(--line-2); background: var(--paper); position: relative; overflow: hidden; font-size: 8px; box-shadow: 0 1px 0 #fff inset; }
+.tc { font-family: var(--mono); font-size: 11px; color: var(--ink-45); display: flex; justify-content: space-between; } .tc b { color: var(--ink); font-weight: 500; }
+.cap { font-size: 12.5px; color: var(--ink-70); line-height: 1.45; }
+/* soft blurred shapes = depth on light */
+.blob { position: absolute; border-radius: 50%; filter: blur(1.6em); opacity: .7; pointer-events: none; }
+.blob.a { width: 60%; height: 60%; left: -10%; top: 50%; background: #cfe6ef; } .blob.b { width: 50%; height: 50%; right: -10%; top: -20%; background: #d7f1ea; }
+/* laptop drawn in code */
+.laptop { position: absolute; left: 50%; top: 50%; width: 64%; transform: translate(-50%, -50%); }
+.lid { position: relative; aspect-ratio: 16 / 10; background: #1a222c; border-radius: .9em .9em .3em .3em; padding: .45em; box-shadow: 0 1.4em 3em rgba(18,27,38,.25); }
+.screen { position: relative; width: 100%; height: 100%; border-radius: .5em; overflow: hidden; background: linear-gradient(160deg, #5b7d99, #2f4257); }
+.base { height: .6em; margin: 0 -3%; background: linear-gradient(#cfd6de, #a9b4c3); border-radius: 0 0 .6em .6em; }
+.mb { position: absolute; inset: 0 0 auto 0; height: 1.3em; background: rgba(255,255,255,.18); display: flex; align-items: center; justify-content: flex-end; padding: 0 .6em; gap: .5em; }
+.mb i { width: .8em; height: .8em; border-radius: .2em; background: #eaf0f4; display: grid; place-items: center; }
+.mb i::before { content: ""; width: .5em; height: .5em; border-radius: 50%; border: .12em solid #1a222c; border-right-color: transparent; transform: rotate(35deg); }
+.pdf { position: absolute; left: 6%; top: 18%; width: 52%; height: 74%; background: #fbfaf6; border-radius: .3em .3em 0 0; padding: .9em 1em; color: #222; box-shadow: 0 .6em 1.6em rgba(0,0,0,.25); }
+.pdf .t { font-size: .7em; color: #777; } .pdf .q { margin-top: .6em; font-size: .85em; line-height: 1.4; position: relative; padding: .2em .3em; }
+.pdf .q i { font-family: "STIX Two Text", serif; font-style: italic; }
+.pdf .l { height: .4em; background: #ddd8cc; border-radius: 2px; margin-top: .55em; } .pdf .l.s { width: 60%; }
+.sel { position: absolute; inset: -.2em -.3em; border: 1px dashed #fff; border-radius: .2em; box-shadow: 0 0 0 200vmax rgba(0,0,0,.25); }
+.spot { position: absolute; left: 50%; top: 42%; width: 66%; height: 9%; transform: translateX(-50%); background: rgba(20,20,24,.92); border-radius: .5em; display: flex; align-items: center; gap: .5em; padding: 0 .6em; color: rgba(255,255,255,.9); font-size: .75em; border: .5px solid rgba(255,255,255,.12); box-shadow: 0 .8em 2em rgba(0,0,0,.4); }
+.spot .th { width: 2.6em; height: 2em; background: #fbfaf6; border-radius: .2em; } .spot .in { flex: 1; } .spot .ph { color: rgba(255,255,255,.4); }
+.res { position: absolute; right: 5%; top: 12%; width: 36%; height: 80%; background: rgba(20,20,24,.92); border-radius: .5em; border: .5px solid rgba(255,255,255,.12); color: rgba(255,255,255,.9); font-size: .7em; padding: .6em .7em; box-shadow: 0 .8em 2em rgba(0,0,0,.4); }
+.res .h { display: flex; justify-content: space-between; color: rgba(255,255,255,.55); font-size: .9em; padding-bottom: .4em; border-bottom: .5px solid rgba(255,255,255,.12); }
+.res .s { margin-top: .5em; color: rgba(255,255,255,.55); font-size: .85em; } .res .s::before { content: "● "; color: var(--mint); }
+.res p { margin-top: .35em; line-height: 1.35; } .res p i { font-family: "STIX Two Text", serif; color: #cff8e7; }
+.res .v { margin-top: .5em; aspect-ratio: 16/9; background: #000; border-radius: .3em; }
+/* the big icon */
+.icon { position: absolute; border-radius: 22%; background: linear-gradient(160deg, #a9b4c3, #3a4553 45%, #121b26); }
+.icon::before { content: ""; position: absolute; inset: 20%; border-radius: 50%; border: .34em solid #fff; border-right-color: transparent; transform: rotate(35deg); }
+.icon::after { content: ""; position: absolute; left: 34%; top: 34%; width: 32%; height: 32%; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #cff8e7, #589da1 60%, #2f6b72); }
+/* site elements */
+.site { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5em; text-align: center; }
+.site .wm { font-size: 2.4em; font-weight: 700; letter-spacing: -.035em; line-height: 1; color: var(--ink); }
+.site .tg { font-size: .85em; color: var(--ink-70); max-width: 22em; }
+.site .bt { margin-top: .3em; font-size: .8em; font-weight: 700; color: var(--mint-ink); background: var(--mint); padding: .6em 1.1em; border-radius: .6em; box-shadow: 0 .6em 1.4em rgba(92,198,176,.35); }
+.nav { position: absolute; top: .8em; left: 1em; right: 1em; display: flex; justify-content: space-between; align-items: center; font-size: .8em; color: var(--ink-70); }
+.nav .b { display: flex; align-items: center; gap: .4em; font-weight: 700; color: var(--ink); }
+.nav .b .icon { position: static; width: 1.3em; height: 1.3em; border-radius: 25%; } .nav .b .icon::before { border-width: .18em; }
+.nav .dl { color: var(--mint-ink); background: var(--mint); padding: .35em .8em; border-radius: .5em; font-weight: 700; }
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 28px; }
+@media (max-width: 720px) { .two { grid-template-columns: 1fr; } }
+.two h3 { font-size: 16px; font-weight: 700; } .two p { color: var(--ink-70); font-size: 14.5px; margin-top: 6px; }
+.two ul { margin: 8px 0 0; padding-left: 18px; color: var(--ink-70); font-size: 14.5px; } .two li + li { margin-top: 4px; }
+</style>
+
+<header class="top wrap"><span><b>Clarity</b> · v2 storyboards, light theme</span><span>static frames · pick by looking</span></header>
+
+<section class="intro wrap">
+  <div>
+    <h1>Two ways to open with the product, not the logo</h1>
+    <p>Both start from the same fact learned from the App Style winners: show the app doing its job in the first frame, on a light ground, with the download button visible immediately. A is a six-second film that ends on the page. B is the page, with the film looping quietly beside it. Same theme, same laptop, same windows rebuilt from the app's own CSS.</p>
+  </div>
+  <div>
+    <div class="sw">
+      <div><i style="background:#eef2f7"></i>paper #eef2f7</div><div><i style="background:#ffffff"></i>white</div><div><i style="background:#e3e9f1"></i>paper-3</div><div><i style="background:#121b26"></i>ink #121b26</div><div><i style="background:#5cc6b0"></i>mint #5cc6b0</div><div><i style="background:#3d8d90"></i>lens #3d8d90</div>
+    </div>
+    <div class="type"><div class="big">Clarity</div><div class="body">Manrope 700 for the wordmark and headings, 400/500 for body. Geist Mono stays for hotkeys and commands.</div><div class="m">⌘⇧E · Clarity.dmg · macOS 14+</div></div>
+  </div>
+</section>
+
+<!-- ============================ A -->
+<section class="section wrap" id="a">
+  <span class="eyebrow">Version A · the film</span>
+  <h2 class="h2">Watch Clarity work, then fall through its icon into the page</h2>
+  <p class="lede">Plays on every full load, about six seconds. Skippable by clicking anywhere. The download button is in the top-right corner from the first frame, so nobody is ever waiting to act.</p>
+  <div class="board">
+    <div class="frame"><div class="art"><div class="blob a"></div><div class="blob b"></div><div class="nav"><span></span><span class="dl">Download</span></div><div class="laptop"><div class="lid"><div class="screen"><div class="mb"><i></i></div><div class="pdf"><div class="t">Problem Set 4 · Q3</div><div class="q">Let <i>f(x) = x² sin x</i>. Find <i>f′(π)</i>.</div><div class="l"></div><div class="l s"></div></div></div></div><div class="base"></div></div></div><div class="tc"><b>0.0 s</b><span>laptop</span></div><div class="cap">A laptop drawn in code on a light ground. A PDF with a calculus problem is open. The Clarity icon sits in the menu bar. Download is already top-right.</div></div>
+    <div class="frame"><div class="art"><div class="blob a"></div><div class="blob b"></div><div class="nav"><span></span><span class="dl">Download</span></div><div class="laptop"><div class="lid"><div class="screen"><div class="mb"><i></i></div><div class="pdf"><div class="t">Problem Set 4 · Q3</div><div class="q">Let <i>f(x) = x² sin x</i>. Find <i>f′(π)</i>.<span class="sel"></span></div><div class="l"></div><div class="l s"></div></div></div></div><div class="base"></div></div></div><div class="tc"><b>1.2 s</b><span>⌘⇧E · drag</span></div><div class="cap">Keys flash, the screen dims, a dashed box is dragged around the problem.</div></div>
+    <div class="frame"><div class="art"><div class="blob a"></div><div class="blob b"></div><div class="nav"><span></span><span class="dl">Download</span></div><div class="laptop"><div class="lid"><div class="screen"><div class="mb"><i></i></div><div class="pdf"><div class="t">Problem Set 4 · Q3</div><div class="q">Let <i>f(x) = x² sin x</i>. Find <i>f′(π)</i>.</div><div class="l"></div><div class="l s"></div></div><div class="spot"><div class="th"></div><div class="in">why does the x² term vanish?<span class="ph">|</span></div></div></div></div><div class="base"></div></div></div><div class="tc"><b>2.4 s</b><span>spotlight box</span></div><div class="cap">The app's real input box slides in (its own CSS: 680×96, 92% dark panel, 180 ms). A question types itself. Enter.</div></div>
+    <div class="frame"><div class="art"><div class="blob a"></div><div class="blob b"></div><div class="nav"><span></span><span class="dl">Download</span></div><div class="laptop"><div class="lid"><div class="screen"><div class="mb"><i></i></div><div class="pdf"><div class="t">Problem Set 4 · Q3</div><div class="q">Let <i>f(x) = x² sin x</i>. Find <i>f′(π)</i>.</div><div class="l"></div><div class="l s"></div></div><div class="res"><div class="h"><span>Clarity</span><span>✕</span></div><div class="s">Done</div><p>Product rule: <i>f′ = 2x sin x + x² cos x</i></p><p>At <i>π</i>: <i>f′(π) = −π²</i></p><div class="v"></div></div></div></div><div class="base"></div></div></div><div class="tc"><b>4.0 s</b><span>result window</span></div><div class="cap">The result window appears with the explanation, then the generated clip plays inside it.</div></div>
+    <div class="frame"><div class="art" style="background:var(--paper)"><div class="blob a"></div><div class="blob b"></div><div class="icon" style="left:-40%;top:-90%;width:180%;height:180%;opacity:.16;filter:blur(.4em)"></div><div class="site"><div class="wm">Clarity</div><div class="tg">A hotkey that explains any problem on your screen.</div><div class="bt">Download for macOS</div></div><div class="nav"><span class="b"><span class="icon"></span>Clarity</span><span>How it works</span></div></div><div class="tc"><b>5.0 → 6.2 s</b><span>zoom · focus</span></div><div class="cap">The camera pushes into the menu-bar icon. Its ring fills the screen and we pass through the glass. The page comes into focus on the other side: wordmark, one line, button. The laptop is gone. The icon has docked top-left.</div></div>
+  </div>
+</section>
+
+<!-- ============================ B -->
+<section class="section wrap" id="b">
+  <span class="eyebrow">Version B · the live poster</span>
+  <h2 class="h2">The page is the first frame; the laptop loops beside it</h2>
+  <p class="lede">No film. The name, line and button are there on load, with a soft entrance. The laptop runs the same capture on a loop, like Cooldock's live dock. On switching to How it works, the laptop slides across and becomes the pinned demo.</p>
+  <div class="board">
+    <div class="frame"><div class="art"><div class="blob a"></div><div class="blob b"></div><div class="nav"><span class="b"><span class="icon"></span>Clarity</span><span>How it works</span></div><div class="site" style="align-items:flex-start;text-align:left;left:6%;right:52%;filter:blur(.3em);opacity:.5"><div class="wm">Clarity</div><div class="tg">A hotkey that explains any problem on your screen.</div><div class="bt">Download for macOS</div></div><div class="laptop" style="left:73%;width:44%;opacity:.4;transform:translate(-50%,-46%) scale(.96)"><div class="lid"><div class="screen"><div class="mb"><i></i></div><div class="pdf"><div class="t">Problem Set 4</div><div class="q">Let <i>f(x) = x² sin x</i>.</div><div class="l"></div></div></div></div><div class="base"></div></div></div><div class="tc"><b>0.0 s</b><span>entrance</span></div><div class="cap">Everything present, soft. Text focuses in from the left, the laptop rises in from the right. 0.9 s total.</div></div>
+    <div class="frame"><div class="art"><div class="blob a"></div><div class="blob b"></div><div class="nav"><span class="b"><span class="icon"></span>Clarity</span><span>How it works</span></div><div class="site" style="align-items:flex-start;text-align:left;left:6%;right:52%"><div class="wm">Clarity</div><div class="tg">A hotkey that explains any problem on your screen.</div><div class="bt">Download for macOS</div></div><div class="laptop" style="left:73%;width:44%"><div class="lid"><div class="screen"><div class="mb"><i></i></div><div class="pdf"><div class="t">Problem Set 4</div><div class="q">Let <i>f(x) = x² sin x</i>.<span class="sel"></span></div><div class="l"></div></div></div></div><div class="base"></div></div></div><div class="tc"><b>1.5 s</b><span>loop · drag</span></div><div class="cap">At rest. The laptop begins its loop: the box is dragged around the problem.</div></div>
+    <div class="frame"><div class="art"><div class="blob a"></div><div class="blob b"></div><div class="nav"><span class="b"><span class="icon"></span>Clarity</span><span>How it works</span></div><div class="site" style="align-items:flex-start;text-align:left;left:6%;right:52%"><div class="wm">Clarity</div><div class="tg">A hotkey that explains any problem on your screen.</div><div class="bt">Download for macOS</div></div><div class="laptop" style="left:73%;width:44%"><div class="lid"><div class="screen"><div class="mb"><i></i></div><div class="pdf"><div class="t">Problem Set 4</div><div class="q">Let <i>f(x) = x² sin x</i>.</div><div class="l"></div></div><div class="spot" style="width:80%"><div class="th"></div><div class="in">why does x² vanish?</div></div></div></div><div class="base"></div></div></div><div class="tc"><b>3.0 s</b><span>loop · ask</span></div><div class="cap">Input box, typed question, Enter.</div></div>
+    <div class="frame"><div class="art"><div class="blob a"></div><div class="blob b"></div><div class="nav"><span class="b"><span class="icon"></span>Clarity</span><span>How it works</span></div><div class="site" style="align-items:flex-start;text-align:left;left:6%;right:52%"><div class="wm">Clarity</div><div class="tg">A hotkey that explains any problem on your screen.</div><div class="bt">Download for macOS</div></div><div class="laptop" style="left:73%;width:44%"><div class="lid"><div class="screen"><div class="mb"><i></i></div><div class="pdf" style="width:46%"><div class="t">Problem Set 4</div><div class="q">Let <i>f(x) = x² sin x</i>.</div><div class="l"></div></div><div class="res" style="width:44%"><div class="h"><span>Clarity</span><span>✕</span></div><div class="s">Done</div><p><i>f′(π) = −π²</i></p><div class="v"></div></div></div></div><div class="base"></div></div></div><div class="tc"><b>5.0 s</b><span>loop · answer</span></div><div class="cap">Result window and clip. Holds three seconds, fades, and the loop restarts. Roughly a ten-second cycle.</div></div>
+    <div class="frame"><div class="art"><div class="blob a"></div><div class="blob b"></div><div class="nav"><span class="b"><span class="icon"></span>Clarity</span><span style="color:var(--ink);font-weight:700">How it works</span></div><div class="laptop" style="left:28%;top:56%;width:44%"><div class="lid"><div class="screen"><div class="mb"><i></i></div><div class="pdf" style="width:46%"><div class="t">Problem Set 4</div><div class="q">Let <i>f(x) = x² sin x</i>.</div></div><div class="res" style="width:44%"><div class="h"><span>Clarity</span><span>✕</span></div><div class="s">Done</div><div class="v"></div></div></div></div><div class="base"></div></div><div class="site" style="align-items:flex-start;text-align:left;left:56%;right:6%;gap:.35em"><div class="wm" style="font-size:1.2em">Press ⌘⇧E and drag a box</div><div class="tg">Around the problem, in whatever app it's in.</div><div class="tg" style="opacity:.4">Add context, or don't</div><div class="tg" style="opacity:.4">Read, then watch</div></div></div><div class="tc"><b>switch</b><span>→ How it works</span></div><div class="cap">On the tab switch, the laptop slides left and pins; the steps appear beside it and advance as you scroll. Back reverses it. Reload boots again.</div></div>
+  </div>
+</section>
+
+<section class="section wrap">
+  <span class="eyebrow">Trade-offs</span>
+  <div class="two">
+    <div><h3>A · the film</h3><p>Stronger first impression, and it's your idea. It costs six seconds on every load, which is far above what the award sites in this category do; they show the product instantly. It works because the button is visible throughout and a click skips it. Best if you want the site to feel like a launch trailer.</p><ul><li>Build effort: high (scene choreography + zoom + focus)</li><li>Risk: some visitors will click through before it ends</li></ul></div>
+    <div><h3>B · the live poster</h3><p>This is what Cooldock, Supaste and Invoko actually do. Product and button in the first frame, motion that never asks for attention. Less theatrical, more confident. The laptop sliding across on the tab switch gives you a real transition moment without gating anything.</p><ul><li>Build effort: medium (loop + slide)</li><li>Risk: less memorable on first load</li></ul></div>
+  </div>
+  <p class="lede" style="margin-top:20px"><b>My recommendation:</b> build B first. Its laptop loop, windows and theme are exactly the pieces A needs. If B feels too quiet once it's real, A is B plus a six-second opening on top, not a rebuild.</p>
+</section>
