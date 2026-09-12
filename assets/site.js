@@ -103,8 +103,9 @@
     if (going) { if (e) e.preventDefault(); return; }
     if (e && (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1)) return;
     if (e) e.preventDefault(); going = true;
-    dl.classList.add('is-going'); dl.querySelector('.label').textContent = 'Opening the latest release →';
-    setTimeout(function () { location.href = dl.href; }, reduced ? 0 : 480);
+    dl.classList.add('is-going'); dl.querySelector('.label').textContent = 'Downloading Clarity.dmg\u2026';
+    location.href = dl.href;   /* GitHub serves the asset as an attachment, so the page stays */
+    setTimeout(function () { dl.classList.remove('is-going'); dl.querySelector('.label').textContent = 'Download for macOS'; going = false; }, 4000);
   }
   dl.addEventListener('click', go);
   addEventListener('keydown', function (e) {
