@@ -2,34 +2,33 @@
 
 The website for [Clarity](https://github.com/s0hamjain/Clarity), a macOS menu-bar app that explains any problem on your screen.
 
-Live at **https://adamzhu.dev/clarity-web/**
+Deploys to Vercel (connect the repo in the Vercel dashboard; `vercel.json` handles `/about`). The old GitHub Pages deploy at adamzhu.dev/clarity-web is stale and should be disabled.
 
 ## What's here
 
 ```
-index.html            One locked screen: mark, wordmark, one line, download.
-how-it-works.html     What it is and how to use it · install · the repository.
-assets/
-  tokens.css          Identity tokens (colour, type, motion). Single source of truth.
-  site.css            Page styles.
-  site.js             Optional behaviour: launch flag, demo, download button.
-  clarity-mark.svg    Vector redraw of the icon; the magnifier group can move on its own.
-  og.png, favicon-32.png, apple-touch-icon.png, icon-256.png
-brand/
-  IDENTITY.md         Identity standards for the site and the desktop app.
+index.html            One document, two views: home (one locked screen) and /about.
+assets/tokens.css     Identity tokens (font, colour, shape, motion). Single source of truth.
+assets/site.css       Page styles.
+assets/site.js        Router, boot, the demo (content in PROBLEMS), download button.
+assets/clarity-mark.svg, og.png, favicon-32.png, apple-touch-icon.png, icon-256.png
+brand/IDENTITY.md     Font and colour standards for the site and the desktop app.
+docs/                 Prototypes and studies from the design phase; captures/ has real app captures.
+vercel.json           cleanUrls, /about rewrite, asset caching.
+dev.py                Local server that mirrors the /about rewrite.
 ```
 
-Plain HTML and CSS. No build step, no framework, no dependencies.
+Plain HTML, CSS and JavaScript. No build step, no dependencies.
 
 ## Run locally
 
 ```sh
-python3 -m http.server 8000
-# open http://localhost:8000
+python3 dev.py
+# open http://localhost:8000 and http://localhost:8000/about
 ```
 
-The launch animation plays on the first visit only. To see it again, clear the `clarity:seen` key from localStorage in DevTools, or open a private window.
+The boot animation plays on every full load. Switching Home and About plays a transition instead. The demo alternates its problem on each load.
 
 ## Deploy
 
-GitHub Pages serves the `main` branch root. Push to `main` and the site updates within a minute.
+Vercel, from `main`. Framework preset "Other", no build command, output directory `.`.

@@ -1,3 +1,5 @@
+> **Superseded on 12 Sep 2026 (afternoon).** The site was rebuilt in this repo: see README.md, brand/IDENTITY.md (font and colour only), and docs/hero-split.html for the design lab that produced the current hero. Kept for history.
+
 # Clarity website · handoff
 
 Written 12 Sep 2026 for continuing the build in Cursor. Everything decided so far, what exists, what to build next, and which tools to install. Read this, then `brand/IDENTITY.md`, then `docs/storyboards-v2.html`.
