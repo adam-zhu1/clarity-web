@@ -1,77 +1,30 @@
-/* Clarity website · behaviour.
- * One document, two views (home, about). A full load boots whichever view the
- * URL names; switching views plays a transition and never re-boots. */
+/* Clarity website · v3. One document, two views. A full load boots the view the URL names;
+ * switching views transitions and never re-boots. Scroll drives the two pinned sections. */
 (function () {
   'use strict';
   var html = document.documentElement, body = document.body;
-  html.classList.add('js');
   var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $ = function (id) { return document.getElementById(id); };
-  var wait = function (ms) { return new Promise(function (r) { setTimeout(r, reduced ? 0 : ms); }); };
-
-  /* ============================================================ content
-   * PROVISIONAL. The app is in development; these problems, explanations and
-   * clips stand in for real output. Replace here and nowhere else. */
-  var PROBLEMS = {
-    calculus: {
-      title: 'Problem set 4 · question 3',
-      q: 'Let <span class="math">f(x) = x² sin x</span>. Find <span class="math">f′(π)</span>.',
-      ask: 'why does the x² term disappear at π?',
-      lines: [
-        '<b>Step 1 — Recognise the shape.</b> <span class="math">f</span> is a product, so use the product rule: <span class="math">(uv)′ = u′v + uv′</span>.',
-        '<b>Step 2 — Differentiate each factor.</b> With <span class="math">u = x²</span> and <span class="math">v = sin x</span>: <span class="math">f′(x) = 2x sin x + x² cos x</span>.',
-        '<b>Step 3 — Evaluate at π.</b> <span class="math">sin π = 0</span>, so the first term vanishes: <span class="math">f′(π) = π² cos π = −π²</span>.'
-      ],
-      clip: '<svg class="clip" viewBox="0 0 320 180" aria-hidden="true"><line class="axis" x1="20" y1="120" x2="300" y2="120"/><line class="axis" x1="60" y1="20" x2="60" y2="160"/><path class="curve" d="M 30 121 C 60 121, 75 60, 105 60 S 150 118, 175 118 S 225 60, 250 60 S 285 115, 300 118"/><g class="mover"><line class="tan" x1="70" y1="112" x2="150" y2="62"/><circle class="pt" cx="110" cy="87" r="3.5"/></g></svg>'
-    },
-    code: {
-      title: 'binary_search.py',
-      q: '<pre>def binary_search(arr, target):\n    lo, hi = 0, len(arr)\n    while lo &lt; hi:\n        mid = (lo + hi) // 2\n        if arr[mid] &lt; target: <b>lo = mid</b>\n        else: hi = mid\n    return lo</pre>',
-      ask: 'why is my binary search not working? visualize where it’s messing up',
-      lines: [
-        '<b>Step 1 — What the loop is supposed to do.</b> Each pass should shrink the window <code>[lo, hi)</code> strictly. As long as it gets smaller every time, the loop has to end.',
-        '<b>Step 2 — Where it stops shrinking.</b> <code>mid = (lo + hi) // 2</code> rounds down. When <code>hi - lo == 1</code>, <code>mid == lo</code>, so <code>lo = mid</code> assigns <code>lo</code> to itself and the window never changes.',
-        '<b>Step 3 — The fix.</b> Move past the midpoint you already checked:',
-        '<pre><code>lo = mid + 1     # instead of lo = mid</code></pre>'
-      ],
-      clip: '<video src="/docs/captures/placeholder-scene.mp4" muted playsinline loop autoplay></video>'
-    }
-  };
 
   /* ============================================================ views */
   var views = { home: $('view-home'), about: $('view-about') };
-  var current = null;
+  var current = null, switching = false;
   function viewFromPath(p) { return /^\/about\/?$/.test(p) ? 'about' : 'home'; }
   function setChrome(name) {
     document.title = name === 'about' ? 'About Clarity' : 'Clarity';
-    document.querySelectorAll('.menu [data-nav]').forEach(function (a) {
-      if (a.dataset.nav === name) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
-    });
+    document.querySelectorAll('.bar [data-nav]').forEach(function (a) { if (a.dataset.nav === name) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
     body.classList.toggle('locked', name === 'home');
-    html.classList.toggle('is-about', name === 'about');
+    var film = $('film'); if (film) { if (name === 'home') film.play().catch(function () {}); else film.pause(); }
   }
-  function revealAbout(stagger) {
-    var rises = views.about.querySelectorAll('.rise');
-    rises.forEach(function (el, i) { el.style.transitionDelay = stagger ? Math.min(i, 8) * 60 + 'ms' : '0ms'; });
-    requestAnimationFrame(function () { rises.forEach(function (el) { el.classList.add('seen'); }); });
-  }
-  var switching = false;
   async function show(name, push) {
     if (switching || name === current) return; switching = true;
     var from = views[current], to = views[name];
     if (push) history.pushState({ v: name }, '', name === 'about' ? '/about' : '/');
-    setChrome(name);
-    if (from && !reduced) {
-      var out = from.animate([{ opacity: 1, filter: 'blur(0)', transform: 'none' }, { opacity: 0, filter: 'blur(6px)', transform: 'translateY(-8px)' }], { duration: 240, easing: 'cubic-bezier(.6,0,.9,.4)', fill: 'forwards' });
-      await out.finished; out.cancel();
-    }
+    if (from && !reduced) { var out = from.animate([{ opacity: 1, filter: 'blur(0)' }, { opacity: 0, filter: 'blur(6px)' }], { duration: 220, easing: 'cubic-bezier(.6,0,.9,.4)', fill: 'forwards' }); await out.finished; out.cancel(); }
     if (from) from.hidden = true;
-    to.hidden = false; scrollTo(0, 0);
-    if (name === 'about') { views.about.querySelectorAll('.rise').forEach(function (el) { el.classList.remove('seen'); }); revealAbout(true); }
-    if (!reduced) {
-      var inn = to.animate([{ opacity: 0, filter: 'blur(6px)', transform: 'translateY(10px)' }, { opacity: 1, filter: 'blur(0)', transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'both' });
-      await inn.finished; inn.cancel();
-    }
+    to.hidden = false; scrollTo(0, 0); setChrome(name);
+    if (name === 'about') { resetAbout(); requestAnimationFrame(onScroll); }
+    if (!reduced) { var inn = to.animate([{ opacity: 0, filter: 'blur(6px)' }, { opacity: 1, filter: 'blur(0)' }], { duration: 420, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'both' }); await inn.finished; inn.cancel(); }
     current = name; switching = false;
   }
   document.addEventListener('click', function (e) {
@@ -80,87 +33,106 @@
   });
   addEventListener('popstate', function () { show(viewFromPath(location.pathname), false); });
 
-  /* ============================================================ the demo */
-  var which = localStorage.getItem('clarity:problem') === 'calculus' ? 'code' : 'calculus'; /* alternates per load */
-  try { localStorage.setItem('clarity:problem', which); } catch (e) {}
-  var timers = [];
-  function dwait(ms) { return new Promise(function (r) { timers.push(setTimeout(r, reduced ? 0 : ms)); }); }
-  function fit() { var w = $('stagewrap').clientWidth; $('stage').style.setProperty('--s', Math.min(1, w / 720)); }
-  function load(p) {
-    $('doc-t').textContent = p.title; $('doc-q').innerHTML = p.q + '<div class="sel" id="sel"></div>';
-    $('ex').innerHTML = p.lines.map(function (l) { return l.indexOf('<pre') === 0 ? l : '<p>' + l + '</p>'; }).join('');
-    $('video').innerHTML = p.clip;
+  /* ============================================================ about: reveals + pinned sections */
+  var revealIO = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) e.target.classList.add('in'); }); }, { threshold: .2 });
+  document.querySelectorAll('.about .focus, .about .reveal').forEach(function (el) { revealIO.observe(el); });
+  function resetAbout() { document.querySelectorAll('.about .focus, .about .reveal').forEach(function (el) { el.classList.remove('in'); }); capStep = -1; beStep = -1; }
+
+  /* 1 · the captures: five shots, five captions */
+  var CAPS = ['Type what’s confusing you, or just press Enter.', 'Press Enter.', 'Reading the problem… then writing.', 'The explanation, in about eight seconds.', 'The animation, about a minute later.'];
+  var capStep = -1;
+  function setCapture(i) {
+    if (i === capStep) return; capStep = i;
+    document.querySelectorAll('#shots .shot').forEach(function (s, k) { s.classList.toggle('on', k === i); });
+    $('cap-line').textContent = CAPS[i];
   }
-  function resetDemo() {
-    timers.forEach(clearTimeout); timers = [];
-    $('keys').className = 'keys'; $('cursor').className = 'cursor';
-    $('dim').classList.remove('on'); $('spot').className = 'spot'; $('typed').textContent = ''; $('ph').style.display = '';
-    $('res').className = 'res'; $('status').className = 'status working'; $('status').textContent = 'Reading the problem…';
-    $('ex').querySelectorAll('p, pre').forEach(function (p) { p.classList.remove('on'); }); $('video').classList.remove('on');
+
+  /* 2 · the backend: twelve steps. nodes lit, edge lit, packet path, status, caption */
+  var STEPS = [
+    { n: ['n1'], e: null, pk: null, st: 'Capture', cap: 'Your screenshot leaves the Mac.' },
+    { n: ['n1', 'n2'], e: 'e2', pk: ['e2', ''], st: 'Reading the problem…', cap: 'The coordinator opens a job for it.' },
+    { n: ['n2', 'n3'], e: 'e3', pk: ['e3', ''], st: 'Reading the problem…', cap: 'Gemini reads the problem off the image, word for word.' },
+    { n: ['n2', 'n4'], e: 'e4', pk: ['e4', ''], st: 'Reading the problem…', cap: 'Has anyone asked this before? If so, the answer is instant.' },
+    { n: ['n2', 'n5'], e: 'e5', pk: ['e5', ''], st: 'Writing explanation…', cap: 'Not this time. Gemini writes the explanation and plans the animation.' },
+    { n: ['n5', 'n1'], e: 'e6', pk: ['e6', 'mint'], lbl: 'l6', st: 'Writing explanation…', cap: 'The explanation is on your screen. You stop waiting here.' },
+    { n: ['n2', 'n7'], e: 'e7', pk: ['e7', ''], st: 'Planning the animation…', cap: 'Three scenes. Claude writes the Manim code for each one.' },
+    { n: ['n7', 'n8'], e: 'e8', pk: ['e8', ''], st: 'Rendering scene 1 of 3…', cap: 'Each scene renders in its own sandbox. If it crashes, Claude fixes it.' },
+    { n: ['n8', 'n9'], e: 'e9', pk: ['e9', ''], st: 'Rendering scene 3 of 3…', cap: 'The scenes are joined into one video.' },
+    { n: ['n9', 'n10'], e: 'e10', pk: ['e10', ''], st: 'Uploading…', cap: 'Stored, so nobody renders this problem twice.' },
+    { n: ['n10', 'n1'], e: 'e11', pk: ['e11', 'amber'], lbl: 'l11', st: 'Done', cap: 'The video plays in the same window.' },
+    { n: ['n2', 'n4'], e: 'e12', pk: ['e12', ''], lbl: 'l12', st: 'Done', cap: 'And the problem is remembered.' }
+  ];
+  var beStep = -1;
+  function setBackend(i) {
+    if (i === beStep) return; var prev = beStep; beStep = i;
+    var flow = $('flow'); if (!flow) return;
+    flow.querySelectorAll('.n').forEach(function (n) { n.classList.remove('on', 'done'); });
+    flow.querySelectorAll('.e, .el').forEach(function (e) { e.classList.remove('on'); });
+    for (var k = 0; k <= i; k++) {
+      var s = STEPS[k];
+      if (s.e) flow.querySelector('#' + s.e).classList.add('on');
+      if (s.lbl) flow.querySelector('#' + s.lbl).classList.add('on');
+      s.n.forEach(function (id) { flow.querySelector('#' + id).classList.add('done'); });
+    }
+    var cur = STEPS[i];
+    cur.n.forEach(function (id) { flow.querySelector('#' + id).classList.add('on'); });
+    var pk = $('pk'); pk.setAttribute('class', 'pk');
+    if (cur.pk && i > prev && !reduced) {
+      var d = flow.querySelector('#' + cur.pk[0]).getAttribute('d');
+      pk.style.setProperty('--path', 'path("' + d + '")');
+      void pk.getBoundingClientRect();
+      pk.setAttribute('class', 'pk go ' + cur.pk[1]);
+    }
+    $('be-status-text').textContent = cur.st;
+    $('be-status').classList.toggle('done', cur.st === 'Done');
+    $('be-line').textContent = cur.cap;
   }
-  async function demo() {
-    var p = PROBLEMS[which]; load(p); resetDemo();
-    await dwait(1400);
-    $('keys').classList.add('on');
-    var ks = $('keys').querySelectorAll('kbd');
-    for (var i = 0; i < ks.length; i++) { ks[i].classList.add('down'); await dwait(100); }
-    await dwait(160); ks.forEach(function (k) { k.classList.remove('down'); });
-    var qr = $('doc-q').getBoundingClientRect(), dr = $('doc').getBoundingClientRect(), sc = +($('stage').style.getPropertyValue('--s') || 1);
-    var cx = (qr.left - dr.left) / sc - 6, cy = (qr.top - dr.top) / sc + 24 - 6;
-    var cur = $('cursor'); cur.style.transition = 'none'; cur.style.left = cx + 'px'; cur.style.top = cy + 'px'; void cur.offsetWidth; cur.style.transition = ''; cur.classList.add('on');
-    $('dim').classList.add('on'); await dwait(120); $('sel').classList.add('on');
-    cur.style.left = (cx + qr.width / sc + 8) + 'px'; cur.style.top = (cy + qr.height / sc + 8) + 'px';
-    await dwait(520); $('dim').classList.remove('on'); $('keys').classList.remove('on'); cur.classList.remove('on');
-    $('spot').classList.add('shown'); await dwait(380);
-    $('ph').style.display = 'none';
-    for (var c = 1; c <= p.ask.length; c++) { $('typed').textContent = p.ask.slice(0, c); await dwait(16 + Math.random() * 22); }
-    await dwait(300); $('spot').classList.remove('shown'); $('spot').classList.add('leaving'); await dwait(160);
-    $('res').classList.add('shown'); await dwait(600);
-    $('status').textContent = 'Writing explanation…'; await dwait(450);
-    var ps = $('ex').querySelectorAll('p, pre');
-    for (var j = 0; j < ps.length; j++) { ps[j].classList.add('on'); await dwait(380); }
-    await dwait(120); $('status').textContent = 'Planning the animation…'; await dwait(500);
-    $('status').textContent = 'Rendering scene 1 of 3…'; await dwait(450);
-    $('status').textContent = 'Rendering scene 2 of 3…'; await dwait(450);
-    $('status').textContent = 'Done'; $('status').className = 'status done'; $('video').classList.add('on');
+  /* Play: walks the twelve steps on a timer by scrolling the page along the section */
+  var playing = null;
+  $('be-replay').addEventListener('click', function () {
+    if (playing) { clearInterval(playing); playing = null; $('be-replay').textContent = 'Play'; return; }
+    var sec = $('backend'), k = 0; $('be-replay').textContent = 'Stop';
+    function tick() {
+      var total = sec.offsetHeight - innerHeight;
+      var top = sec.getBoundingClientRect().top + scrollY;
+      scrollTo({ top: top + total * (k + .5) / STEPS.length, behavior: 'instant' });
+      k++; if (k >= STEPS.length) { clearInterval(playing); playing = null; $('be-replay').textContent = 'Play'; }
+    }
+    tick(); playing = setInterval(tick, 1100);
+  });
+
+  function progress(sec) {
+    var r = sec.getBoundingClientRect(), total = sec.offsetHeight - innerHeight;
+    return Math.min(1, Math.max(0, -r.top / total));
   }
-  if (!reduced) {
-    $('stagewrap').addEventListener('pointermove', function (e) {
-      var r = $('stagewrap').getBoundingClientRect(); var dx = (e.clientX - r.left) / r.width - .5, dy = (e.clientY - r.top) / r.height - .5;
-      $('tilt').style.setProperty('--ry', (dx * 6).toFixed(2) + 'deg'); $('tilt').style.setProperty('--rx', (-dy * 5).toFixed(2) + 'deg');
-    });
-    $('stagewrap').addEventListener('pointerleave', function () { $('tilt').style.setProperty('--ry', '0deg'); $('tilt').style.setProperty('--rx', '0deg'); });
+  function onScroll() {
+    if (current !== 'about') return;
+    setCapture(Math.min(4, Math.floor(progress($('capture')) * 5)));
+    setBackend(Math.min(STEPS.length - 1, Math.floor(progress($('backend')) * STEPS.length)));
   }
-  addEventListener('resize', fit);
+  addEventListener('scroll', function () { requestAnimationFrame(onScroll); }, { passive: true });
+  addEventListener('resize', onScroll);
 
   /* ============================================================ download */
-  var dl = $('download');
-  var going = false;
+  var dl = $('download'), going = false;
   function go(e) {
     if (going) { if (e) e.preventDefault(); return; }
     if (e && (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1)) return;
     if (e) e.preventDefault(); going = true;
     dl.classList.add('is-going'); dl.querySelector('.label').textContent = 'Opening the latest release →';
-    setTimeout(function () { location.href = dl.href; }, reduced ? 0 : 520);
+    setTimeout(function () { location.href = dl.href; }, reduced ? 0 : 480);
   }
   dl.addEventListener('click', go);
   addEventListener('keydown', function (e) {
     if (e.key.toLowerCase() !== 'd' || e.metaKey || e.ctrlKey || e.altKey || current !== 'home') return;
     if (/^(input|textarea|select)$/i.test(document.activeElement.tagName)) return;
-    e.preventDefault(); var k = dl.querySelector('kbd'); k.classList.add('down'); setTimeout(function () { k.classList.remove('down'); }, 120); go();
+    e.preventDefault(); go();
   });
-
-  /* ============================================================ about visuals play when seen */
-  var io = new IntersectionObserver(function (es) { es.forEach(function (e) { e.target.classList.toggle('play', e.isIntersecting); }); }, { threshold: .25 });
-  ['flow', 'stack'].forEach(function (id) { var el = $(id); if (el) io.observe(el); });
 
   /* ============================================================ boot */
   var start = viewFromPath(location.pathname);
   history.replaceState({ v: start }, '', location.pathname);
-  Object.keys(views).forEach(function (k) { views[k].hidden = k !== start; }); current = start; setChrome(start);
-  fit(); load(PROBLEMS[which]);
-  document.fonts.ready.then(function () {
-    if (start === 'home') { html.classList.add('boot'); demo(); }
-    else { html.classList.add('boot'); revealAbout(true); }
-  });
+  Object.keys(views).forEach(function (k) { views[k].hidden = k !== start; });
+  current = start; setChrome(start);
+  document.fonts.ready.then(function () { html.classList.add('boot'); if (start === 'about') onScroll(); });
 })();

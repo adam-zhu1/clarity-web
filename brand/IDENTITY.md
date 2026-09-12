@@ -1,6 +1,6 @@
 # Clarity identity standards
 
-**Version 2.1 · 12 September 2026.** (2.1: wordmark and headings moved from Archivo to Fraunces.) Font and colour for anyone building Clarity's UI, on the website or in the desktop app. Values are mirrored in [`assets/tokens.css`](../assets/tokens.css). When either changes, change both.
+**Version 3 · 12 September 2026.** (3: the site follows Apple's page rhythm; About alternates dark and light sections; Fragment Mono is confined to code and status text.) Font and colour for anyone building Clarity's UI, on the website or in the desktop app. Values are mirrored in [`assets/tokens.css`](../assets/tokens.css). When either changes, change both.
 
 ---
 
@@ -12,7 +12,8 @@
 |---|---|---|
 | Wordmark and About headings | **Fraunces**, weight 500, optical size 144 (wordmark) / 60 (headings), SOFT axis 30 | Wordmark 64–124 px, letter-spacing −0.02em, line-height 0.9. Headings 30–46 px. The serif is the identity's one warm element. |
 | Interface and body text | **Archivo**, width 100, weights 400 / 500 / 600 | Body 16 px / 1.5. Button labels 15 px, weight 600. |
-| Slogan, menu links, fine print, hotkeys, labels, code | **Fragment Mono**, weight 400 | Slogan 18–22 px. Menu links 13 px. Fine print 12.5 px. Small labels 12 px uppercase with +0.08em tracking. |
+| Slogan, sentences under headlines, menu, notes | **Archivo** 400 | Slogan 18–24 px. Section sentences 17–21 px. Menu 13 px. Notes 13–14 px. |
+| Code, status text, hotkey keycaps, small captions in diagrams | **Fragment Mono**, weight 400 | 11–13 px. Never for headlines, slogans or menu items. |
 | Maths in sample problems | **STIX Two Text**, italic | Formulae shown as examples only. |
 | Inside pictures of the app's windows | System stack: `-apple-system, "SF Pro Text", system-ui` | 13 px / 1.5; the Spotlight input 15 px / 1.4; code `SF Mono` 12 px. The picture must match the real window. |
 
@@ -35,7 +36,7 @@ The **system font only**, as today: `-apple-system, BlinkMacSystemFont, "SF Pro 
 
 ## Colour
 
-Dark only. Sampled from the app icon.
+Sampled from the app icon. The home page is dark. About alternates dark and light sections, Apple's way; light sections use the paper set below and the darker mint for contrast.
 
 | Token | Value | Role |
 |---|---|---|
@@ -56,6 +57,10 @@ Dark only. Sampled from the app icon.
 | `--c-glass-hi` | `#cff8e7` | Emphasis on dark: maths and highlighted terms in explanations. |
 | `--c-danger` | `#ff8a8a` | Errors only. |
 | `--c-paper` | `#f7f5ef` | Paper cards in demos. Warm, never pure white. |
+| `--c-paper-2` | `#ffffff` | Ground of light sections on About. |
+| `--c-ink-on-paper` | `#121b26` | Text on light sections. |
+| `--c-mint-on-paper` | `#3fb39b` | Mint on light grounds (contrast). |
+| `--c-lens-on-paper` | `#3d8d90` | Secondary on light grounds. |
 
 ### The mark's colours
 

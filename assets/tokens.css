@@ -23,6 +23,11 @@
   --c-glass-hi:   #cff8e7;   /* glass highlight · math and emphasis on dark */
   --c-danger:     #ff8a8a;   /* errors only */
   --c-paper:      #f7f5ef;   /* the "problem set" card in demos: warm paper, not white */
+  /* ---- light sections (About alternates dark and light) */
+  --c-paper-2:    #ffffff;   /* ground of light sections */
+  --c-ink-on-paper: #121b26; /* text on light sections */
+  --c-mint-on-paper: #3fb39b;/* mint darkened for contrast on white */
+  --c-lens-on-paper: #3d8d90;
 
   /* ---- the app's own window tokens (base.css), used when the site shows the app */
   --app-panel:    rgba(20, 20, 24, 0.92);

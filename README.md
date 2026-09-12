@@ -7,12 +7,14 @@ Deploys to Vercel (connect the repo in the Vercel dashboard; `vercel.json` handl
 ## What's here
 
 ```
-index.html            One document, two views: home (one locked screen) and /about.
+index.html            One document, two views: home (one locked screen with the real recording) and /about
+                      (five sections in Apple's rhythm; two are pinned and driven by scroll).
 assets/tokens.css     Identity tokens (font, colour, shape, motion). Single source of truth.
 assets/site.css       Page styles.
-assets/site.js        Router, boot, the demo (content in PROBLEMS), download button.
+assets/site.js        Router, boot, scroll-driven sections, the backend step machine, download button.
 assets/clarity-mark.svg, og.png, favicon-32.png, apple-touch-icon.png, icon-256.png
 brand/IDENTITY.md     Font and colour standards for the site and the desktop app.
+assets/icons/         Technology logos (Simple Icons, CC0).
 docs/                 Prototypes and studies from the design phase; captures/ has real app captures.
 vercel.json           cleanUrls, /about rewrite, asset caching.
 dev.py                Local server that mirrors the /about rewrite.

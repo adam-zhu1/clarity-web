@@ -20,140 +20,149 @@
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..500,0..100&family=Archivo:wdth,wght@62..125,400..600&family=Fragment+Mono&family=STIX+Two+Text:ital@1&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..500,0..100&family=Archivo:wght@400;500;600&family=Fragment+Mono&display=swap">
   <link rel="stylesheet" href="/assets/tokens.css">
   <link rel="stylesheet" href="/assets/site.css">
 </head>
 <body>
-<div class="grain" aria-hidden="true"></div>
-<div class="glow" aria-hidden="true"></div>
 
-<nav class="menu" aria-label="Primary">
-  <a class="brand" href="/" data-nav="home">
-    <svg viewBox="0 0 100 100" aria-hidden="true">
-      <defs>
-        <linearGradient id="sq" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a9b4c3"/><stop offset=".45" stop-color="#3a4553"/><stop offset="1" stop-color="#121b26"/></linearGradient>
-        <radialGradient id="lens" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#cff8e7"/><stop offset=".55" stop-color="#589da1"/><stop offset="1" stop-color="#2f6b72"/></radialGradient>
-        <linearGradient id="handle" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8fe3cf"/><stop offset="1" stop-color="#5cc2ad"/></linearGradient>
-      </defs>
-      <rect x="2" y="2" width="96" height="96" rx="22" fill="url(#sq)"/>
-      <circle cx="50" cy="49" r="29" fill="none" stroke="#fff" stroke-width="9.5" stroke-linecap="round" stroke-dasharray="132 60" transform="rotate(38 50 49)"/>
-      <line x1="66" y1="64" x2="80" y2="78" stroke="url(#handle)" stroke-width="9" stroke-linecap="round"/>
-      <circle cx="52" cy="48" r="18.5" fill="url(#lens)" stroke="#8ddccb" stroke-width="1.6"/>
-    </svg>
-    Clarity
-  </a>
-  <div class="links">
-    <a class="link" href="/about" data-nav="about">About</a>
-    <a class="link gh" href="https://github.com/s0hamjain/Clarity"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
+<nav class="bar" aria-label="Primary">
+  <div class="bar-in">
+    <a class="brand" href="/" data-nav="home">
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+        <defs>
+          <linearGradient id="sq" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a9b4c3"/><stop offset=".45" stop-color="#3a4553"/><stop offset="1" stop-color="#121b26"/></linearGradient>
+          <radialGradient id="lens" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#cff8e7"/><stop offset=".55" stop-color="#589da1"/><stop offset="1" stop-color="#2f6b72"/></radialGradient>
+          <linearGradient id="handle" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8fe3cf"/><stop offset="1" stop-color="#5cc2ad"/></linearGradient>
+        </defs>
+        <rect x="2" y="2" width="96" height="96" rx="22" fill="url(#sq)"/>
+        <circle cx="50" cy="49" r="29" fill="none" stroke="#fff" stroke-width="9.5" stroke-linecap="round" stroke-dasharray="132 60" transform="rotate(38 50 49)"/>
+        <line x1="66" y1="64" x2="80" y2="78" stroke="url(#handle)" stroke-width="9" stroke-linecap="round"/>
+        <circle cx="52" cy="48" r="18.5" fill="url(#lens)" stroke="#8ddccb" stroke-width="1.6"/>
+      </svg>
+      Clarity
+    </a>
+    <div class="links">
+      <a href="/about" data-nav="about">About</a>
+      <a href="https://github.com/s0hamjain/Clarity">GitHub</a>
+      <a class="pill" href="https://github.com/s0hamjain/Clarity/releases/latest">Download</a>
+    </div>
   </div>
 </nav>
 
-<!-- ============================================================ HOME -->
+<!-- ============================================================ HOME · one screen -->
 <main class="view home" id="view-home">
   <div class="hero">
-    <div class="copy">
-      <h1 class="wordmark">Clarity</h1>
-      <p class="slogan">A tutor, one key away.</p>
+    <h1 class="wordmark">Clarity</h1>
+    <p class="slogan">A tutor, one key away.</p>
+    <div class="cta">
       <a class="dl" id="download" href="https://github.com/s0hamjain/Clarity/releases/latest">
         <svg class="apple" viewBox="0 0 17 20" aria-hidden="true"><path fill="currentColor" d="M14.1 10.6c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.9-.8-3.1-.8C4 5.4 1.5 7.4 1.5 11.1c0 1.1.2 2.2.6 3.4.5 1.6 2.5 5.4 4.5 5.4 1.1 0 1.8-.7 3.2-.7 1.3 0 2 .7 3.2.7 2.1 0 3.9-3.5 4.4-5.1-2.8-1.3-3.3-3.8-3.3-4.2zM11.9 3.6c.6-.7 1-1.8.9-2.8-.9 0-2 .6-2.6 1.4-.6.7-1.1 1.8-.9 2.8 1 .1 2-.5 2.6-1.4z"/></svg>
-        <span class="label">Download for macOS</span> <kbd aria-hidden="true">D</kbd>
+        <span class="label">Download for macOS</span>
       </a>
-      <p class="fine">Clarity.dmg · macOS 14+ · Apple Silicon · free, open source</p>
+      <span class="note">macOS 14 or later · Apple Silicon</span>
     </div>
-
-    <!-- The app answering a problem on the page. Windows are rebuilt from the
-         app's own CSS. All content is provisional (the app is in development)
-         and lives in PROBLEMS in site.js so it swaps in one edit. -->
-    <div class="stagewrap" id="stagewrap" aria-label="Clarity explaining a problem"><div class="stage" id="stage"><div class="tilt" id="tilt">
-      <div class="cursor" id="cursor" aria-hidden="true"></div>
-      <div class="keys" id="keys" aria-hidden="true"><kbd>⌘</kbd><kbd>⇧</kbd><kbd>E</kbd></div>
-      <div class="doc" id="doc" aria-hidden="true">
-        <div class="t" id="doc-t"></div>
-        <div class="q" id="doc-q"></div>
-        <div class="lines"><i></i><i></i><i></i></div>
-        <div class="dim" id="dim"></div>
-      </div>
-      <div class="spot" id="spot" aria-hidden="true"><div class="thumb"></div><div class="field"><span id="typed"></span><span class="caret"></span><span class="ph" id="ph">Add context… (why is my binary search not working?)</span></div><div class="hint"><kbd>↓</kbd> <kbd>↵</kbd></div></div>
-      <div class="res" id="res" aria-hidden="true">
-        <div class="header"><span class="title">Clarity</span><span class="close">✕</span></div>
-        <div class="body">
-          <div class="status working" id="status">Reading the problem…</div>
-          <div class="ex" id="ex"></div>
-          <div class="video" id="video"></div>
-        </div>
-      </div>
-    </div></div></div>
+    <div class="film">
+      <video id="film" src="/docs/captures/capture-flow@2x.mp4" poster="/docs/captures/capture-flow-poster@2x.png" muted playsinline loop preload="metadata" aria-label="Clarity capturing a problem and explaining it"></video>
+    </div>
   </div>
 </main>
 
-<!-- ============================================================ ABOUT -->
+<!-- ============================================================ ABOUT · scrolls -->
 <main class="view about" id="view-about" hidden>
-  <article class="wrap">
 
-    <section class="block" id="use">
-      <span class="eyebrow rise">How you use it</span>
-      <h2 class="h2 rise">One key.</h2>
-      <ol class="flow rise" id="flow" aria-label="The four steps">
-        <li><div class="vis"><div class="k3"><kbd>⌘</kbd><kbd>⇧</kbd><kbd>E</kbd></div></div><h3>Press</h3></li>
-        <li><div class="vis"><div class="mdoc"><i></i><i></i><i></i><span class="msel"></span></div></div><h3>Drag a box</h3></li>
-        <li><div class="vis"><div class="mspot"><span class="mthumb"></span><span class="mtext"></span></div></div><h3>Ask, or don't</h3></li>
-        <li><div class="vis"><div class="mres"><i></i><i></i><i></i><span class="mvid"></span></div></div><h3>Read. Then watch.</h3></li>
-      </ol>
-      <p class="note rise">Words in 8 seconds. Video in a minute.</p>
-    </section>
-
-    <section class="block" id="inside">
-      <span class="eyebrow rise">What it's built with</span>
-      <h2 class="h2 rise">On your Mac, and in the cloud.</h2>
-      <div class="stack rise" id="stack">
-        <div class="col">
-          <h3>On your Mac</h3>
-          <ul>
-            <li><i class="ico" style="--i:url(/assets/icons/python.svg)"></i><b>Python</b><span>the menu-bar app</span></li>
-            <li><i class="ico" style="--i:url(/assets/icons/go.svg)"></i><b>Go</b><span>coordinates each request</span></li>
-            <li><i class="ico" style="--i:url(/assets/icons/fastapi.svg)"></i><b>FastAPI</b><span>the agent service</span></li>
-            <li><i class="ico" style="--i:url(/assets/icons/langchain.svg)"></i><b>LangGraph</b><span>the agents</span></li>
-            <li><i class="ico" style="--i:url(/assets/icons/docker.svg)"></i><b>Docker</b><span>sandboxed rendering</span></li>
-            <li><i class="ico txt">M</i><b>Manim</b><span>draws the animation</span></li>
-            <li><i class="ico" style="--i:url(/assets/icons/ffmpeg.svg)"></i><b>ffmpeg</b><span>joins the scenes</span></li>
-          </ul>
-        </div>
-        <div class="col">
-          <h3>In the cloud</h3>
-          <ul>
-            <li><i class="ico" style="--i:url(/assets/icons/googlegemini.svg)"></i><b>Gemini</b><span>reads and explains</span></li>
-            <li><i class="ico" style="--i:url(/assets/icons/anthropic.svg)"></i><b>Claude</b><span>writes the animation code</span></li>
-            <li><i class="ico txt">V</i><b>Voyage AI</b><span>finds similar examples</span></li>
-            <li><i class="ico" style="--i:url(/assets/icons/mongodb.svg)"></i><b>MongoDB Atlas</b><span>jobs, cache, examples</span></li>
-            <li><i class="ico" style="--i:url(/assets/icons/amazons3.svg)"></i><b>S3</b><span>finished videos</span></li>
-          </ul>
-        </div>
+  <!-- 1 · the real capture, pinned, driven by scroll -->
+  <section class="sec dark pin" id="capture" data-steps="5">
+    <div class="sticky">
+      <h2 class="h2 focus">Press <kbd>⌘</kbd><kbd>⇧</kbd><kbd>E</kbd>. Drag a box.</h2>
+      <p class="line focus" id="cap-line">Type what's confusing you, or just press Enter.</p>
+      <div class="shots" id="shots">
+        <img class="shot spot" src="/docs/captures/spotlight-rest@2x.png" width="1360" height="192" alt="The Spotlight box with a thumbnail of the capture">
+        <img class="shot spot" src="/docs/captures/spotlight-typed@2x.png" width="1360" height="192" alt="The Spotlight box with a question typed in">
+        <img class="shot res" src="/docs/captures/result-status@2x.png" width="880" height="1360" alt="The result window: writing explanation">
+        <img class="shot res" src="/docs/captures/result-explanation@2x.png" width="880" height="1360" alt="The result window with the explanation">
+        <img class="shot res" src="/docs/captures/result-video@2x.png" width="880" height="1360" alt="The result window with the explanation and the animation">
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="block" id="install">
-      <span class="eyebrow rise">Install</span>
-      <h2 class="h2 rise">Four steps.</h2>
-      <ol class="setup rise">
-        <li><span class="ic">⤓</span><h3>Download</h3><p>Clarity.dmg → Applications</p></li>
-        <li><span class="ic">⚙</span><h3>Open Anyway</h3><p>Privacy &amp; Security, once</p></li>
-        <li><span class="ic">◉</span><h3>Allow</h3><p>Screen Recording · Input Monitoring</p></li>
-        <li><span class="ic"><kbd>⌘</kbd><kbd>⇧</kbd><kbd>E</kbd></span><h3>Press</h3><p>You're in.</p></li>
-      </ol>
-      <p class="note rise">macOS 14+ · Apple Silicon · <a href="https://github.com/s0hamjain/Clarity/blob/main/docs/SETUP.md">backend setup →</a></p>
-    </section>
+  <!-- 2 · the backend, animated -->
+  <section class="sec light pin" id="backend" data-steps="12">
+    <div class="sticky">
+      <h2 class="h2 focus">What happens next.</h2>
+      <p class="line focus" id="be-line">Your screenshot leaves the Mac.</p>
+      <div class="flow" id="flow" role="img" aria-label="The screenshot goes to the coordinator, Gemini reads it, MongoDB is checked for a cached answer, Gemini writes the explanation which returns in seconds, then Claude writes animation code for three scenes, Docker renders them, ffmpeg joins them, S3 stores the video and it returns to the window.">
+        <svg viewBox="0 0 1000 560" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="m" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs>
+          <path class="e" id="e2"  d="M180 110 H300"/>
+          <path class="e" id="e3"  d="M440 110 H560"/>
+          <path class="e" id="e4"  d="M700 110 H800"/>
+          <path class="e" id="e5"  d="M370 150 V270 H560"/>
+          <path class="e ret mint" id="e6"  d="M630 230 C630 190, 140 200, 120 150"/>
+          <path class="e" id="e7"  d="M370 150 V440 H300"/>
+          <path class="e" id="e8"  d="M440 440 H520"/>
+          <path class="e" id="e9"  d="M660 440 H720"/>
+          <path class="e" id="e10" d="M860 440 H900"/>
+          <path class="e ret amber" id="e11" d="M940 400 C940 300, 70 330, 60 150"/>
+          <path class="e" id="e12" d="M440 130 C520 190, 780 190, 860 150"/>
+          <circle class="pk" id="pk" r="6"/>
+          <g class="n" id="n1"><rect x="40" y="70" width="140" height="80" rx="14"/><image href="/assets/icons/apple.svg" x="60" y="86" width="22" height="22"/><text class="t" x="90" y="103">Your Mac</text><text class="s" x="60" y="134">the capture</text></g>
+          <g class="n" id="n2"><rect x="300" y="70" width="140" height="80" rx="14"/><image href="/assets/icons/go.svg" x="320" y="88" width="22" height="22"/><text class="t" x="350" y="103">Coordinator</text><text class="s" x="320" y="134">Go · the job</text></g>
+          <g class="n" id="n3"><rect x="560" y="70" width="140" height="80" rx="14"/><image href="/assets/icons/googlegemini.svg" x="580" y="86" width="22" height="22"/><text class="t" x="610" y="103">Gemini</text><text class="s" x="580" y="134">reads the image</text></g>
+          <g class="n" id="n4"><rect x="800" y="70" width="160" height="80" rx="14"/><image href="/assets/icons/mongodb.svg" x="820" y="86" width="22" height="22"/><text class="t" x="850" y="103">MongoDB</text><text class="s" x="820" y="134">seen before?</text></g>
+          <g class="n" id="n5"><rect x="560" y="230" width="140" height="80" rx="14"/><image href="/assets/icons/googlegemini.svg" x="580" y="246" width="22" height="22"/><text class="t" x="610" y="263">Gemini</text><text class="s" x="580" y="294">explains it</text></g>
+          <g class="n" id="n7"><rect x="300" y="400" width="140" height="80" rx="14"/><image href="/assets/icons/anthropic.svg" x="320" y="416" width="22" height="22"/><text class="t" x="350" y="433">Claude</text><text class="s" x="320" y="464">writes Manim ×3</text></g>
+          <g class="n" id="n8"><rect x="520" y="400" width="140" height="80" rx="14"/><image href="/assets/icons/docker.svg" x="540" y="416" width="22" height="22"/><text class="t" x="570" y="433">Docker</text><text class="s" x="540" y="464">renders scenes</text></g>
+          <g class="n" id="n9"><rect x="720" y="400" width="140" height="80" rx="14"/><image href="/assets/icons/ffmpeg.svg" x="740" y="416" width="22" height="22"/><text class="t" x="770" y="433">ffmpeg</text><text class="s" x="740" y="464">joins them</text></g>
+          <g class="n" id="n10"><rect x="900" y="400" width="80" height="80" rx="14"/><image href="/assets/icons/amazons3.svg" x="916" y="416" width="22" height="22"/><text class="t" x="946" y="433">S3</text><text class="s" x="916" y="464">stores</text></g>
+          <text class="el" id="l6" x="150" y="218">explanation · 8 s</text>
+          <text class="el" id="l11" x="440" y="352">video · about a minute</text>
+          <text class="el" id="l12" x="600" y="182">remember it</text>
+        </svg>
+      </div>
+      <div class="be-status" id="be-status"><span class="dot"></span><span id="be-status-text">Capture</span></div>
+      <button type="button" class="replay" id="be-replay">Play</button>
+    </div>
+  </section>
 
-    <section class="block source rise" id="source">
-      <a class="repo" href="https://github.com/s0hamjain/Clarity"><span class="ul">Open source on GitHub</span><span class="arrow" aria-hidden="true">→</span></a>
-      <p class="sub">github.com/s0hamjain/Clarity</p>
-    </section>
+  <!-- 3 · built with -->
+  <section class="sec dark" id="built">
+    <h2 class="h2 focus">Built with.</h2>
+    <ul class="logos reveal">
+      <li><i style="--i:url(/assets/icons/python.svg)"></i>Python</li>
+      <li><i style="--i:url(/assets/icons/go.svg)"></i>Go</li>
+      <li><i style="--i:url(/assets/icons/fastapi.svg)"></i>FastAPI</li>
+      <li><i style="--i:url(/assets/icons/langchain.svg)"></i>LangGraph</li>
+      <li><i style="--i:url(/assets/icons/googlegemini.svg)"></i>Gemini</li>
+      <li><i style="--i:url(/assets/icons/anthropic.svg)"></i>Claude</li>
+      <li><i class="txt">V</i>Voyage AI</li>
+      <li><i style="--i:url(/assets/icons/mongodb.svg)"></i>MongoDB Atlas</li>
+      <li><i style="--i:url(/assets/icons/docker.svg)"></i>Docker</li>
+      <li><i class="txt">M</i>Manim</li>
+      <li><i style="--i:url(/assets/icons/ffmpeg.svg)"></i>ffmpeg</li>
+      <li><i style="--i:url(/assets/icons/amazons3.svg)"></i>S3</li>
+    </ul>
+  </section>
 
-    <footer class="foot">
-      <span>Clarity</span>
-      <nav aria-label="Footer"><a href="/" data-nav="home">Home</a><a href="https://github.com/s0hamjain/Clarity/releases">Releases</a></nav>
-    </footer>
-  </article>
+  <!-- 4 · install -->
+  <section class="sec light" id="install">
+    <h2 class="h2 focus">Two permissions.</h2>
+    <p class="line focus">macOS asks twice. Then it's yours.</p>
+    <ol class="dialogs reveal">
+      <li><div class="dlg"><span class="dlg-ic">⤓</span><b>Clarity.dmg</b><span>Drag Clarity to Applications.</span><em>Open</em></div><h3>1 · Download</h3></li>
+      <li><div class="dlg"><span class="dlg-ic">⚠︎</span><b>“Clarity” was blocked</b><span>Privacy &amp; Security → Open Anyway.</span><em>Open Anyway</em></div><h3>2 · Open</h3></li>
+      <li><div class="dlg"><span class="dlg-ic">◉</span><b>Screen Recording</b><span>Needed to capture the box you draw.</span><em>Allow</em></div><h3>3 · Allow</h3></li>
+      <li><div class="dlg"><span class="dlg-ic">⌨︎</span><b>Input Monitoring</b><span>Needed for <kbd>⌘</kbd><kbd>⇧</kbd><kbd>E</kbd>.</span><em>Allow</em></div><h3>4 · Press</h3></li>
+    </ol>
+    <p class="line small">The backend runs from the repository for now. <a href="https://github.com/s0hamjain/Clarity/blob/main/docs/SETUP.md">Setup guide →</a></p>
+  </section>
+
+  <!-- 5 · source -->
+  <section class="sec dark last" id="source">
+    <h2 class="h2 focus">Open source.</h2>
+    <a class="repo reveal" href="https://github.com/s0hamjain/Clarity"><span class="txt">github.com/s0hamjain/Clarity</span> <span class="arrow" aria-hidden="true">→</span></a>
+    <footer class="foot"><a href="/" data-nav="home">Clarity</a><a href="https://github.com/s0hamjain/Clarity/releases">Releases</a></footer>
+  </section>
 </main>
 
 <script src="/assets/site.js" defer></script>
