@@ -78,9 +78,9 @@
     { n: ['n2', 'n5'], e: 'e5', pk: ['e5', ''], st: 'Writing explanation…', t: 'Explain', cap: 'Gemini writes the explanation and plans the animation.' },
     { n: ['n5', 'n1'], e: 'e6', pk: ['e6', 'mint'], lbl: 'l6', st: 'Writing explanation…', t: 'On your screen', cap: 'The explanation arrives. About eight seconds.' },
     { n: ['n2', 'n7'], e: 'e7', pk: ['e7', ''], st: 'Planning the animation…', t: 'Write code', cap: 'Three scenes. Claude writes Manim for each.' },
-    { n: ['n7', 'n8'], e: 'e8', pk: ['e8', ''], st: 'Rendering scene 1 of 3…', t: 'Render', cap: 'Each scene renders in a sandbox. Crashes get fixed and retried.' },
-    { n: ['n8', 'n9'], e: 'e9', pk: ['e9', ''], st: 'Rendering scene 3 of 3…', t: 'Join', cap: 'ffmpeg joins the scenes into one video.' },
-    { n: ['n9', 'n10'], e: 'e10', pk: ['e10', ''], st: 'Uploading…', t: 'Store', cap: 'S3 keeps it, so nobody renders this twice.' },
+    { n: ['n7', 'n8'], e: 'e8', pk: ['e8', ''], st: 'Rendering the animation…', t: 'Render', cap: 'Each scene renders in a sandbox. Crashes get fixed and retried.' },
+    { n: ['n8', 'n9'], e: 'e9', pk: ['e9', ''], st: 'Rendering the animation…', t: 'Join', cap: 'ffmpeg joins the scenes into one video.' },
+    { n: ['n9', 'n10'], e: 'e10', pk: ['e10', ''], st: 'Rendering the animation…', t: 'Store', cap: 'S3 keeps it, so nobody renders this twice.' },
     { n: ['n10', 'n1'], e: 'e11', pk: ['e11', 'amber'], lbl: 'l11', st: 'Done', t: 'Play', cap: 'The video plays in the same window. About a minute.' },
     { n: ['n2', 'n4'], e: 'e12', pk: ['e12', ''], lbl: 'l12', st: 'Done', t: 'Remember', cap: 'The problem is remembered for the next person.' }
   ];

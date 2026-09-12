@@ -67,16 +67,7 @@ Square gradient `#a9b4c3` → `#3a4553` → `#121b26`. Ring `#ffffff`. Glass `#c
 
 ### Desktop app
 
-The app's window tokens (`desktop/clarity/ui/shared/base.css`), with one recommended change:
-
-| Variable | Current | Recommended |
-|---|---|---|
-| `--panel` | `rgba(20,20,24,.92)` | `rgba(14,20,28,.92)` so the panel matches the site and icon |
-| `--accent` | `#7aa2ff` | **`#6fd1bd`** |
-| `.item.selected` background | `rgba(122,162,255,.18)` | `rgba(111,209,189,.18)` |
-| `--text` / `--text-dim` / `--text-faint` | white at `.92` / `.55` / `.38` | keep |
-| `--stroke` / `--field` | white at `.10` / `.07` | keep |
-| `--danger` | `#ff8a8a` | keep |
+The app adopted these on 12 Sep 2026 (`desktop/clarity/ui/shared/base.css` on main): panel `rgba(14,20,28,.92)`, accent `#6fd1bd`, accent-ink `#0b1b18`, text at `.92 / .55 / .38` white, stroke `.10`, field `.07`, radius 12 px. The Spotlight box paints a lighter panel, `rgba(14,20,28,.55)`, over the system blur. The screen-edge glow shown while Clarity works is a 7 px conic ring, `#6fd1bd → #8f6fd1 → #6fd1bd`, sweeping once every 8 s over a 22% dim; the violet is the one place a second hue appears, and only in that ring.
 
 ### Rules
 

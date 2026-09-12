@@ -59,6 +59,7 @@ kbd { font: 400 .78em/1 var(--f-mono); padding: .3em .45em; border: 1px solid cu
 .boot .wordmark { animation: focus-word 800ms var(--ease-out) 0ms both; will-change: filter, transform, opacity; }
 .boot .slogan { animation: focus 420ms var(--ease-out) 460ms both; }
 .boot .cta { animation: focus 400ms var(--ease-out) 580ms both; }
+.boot .firstrun { animation: appear 400ms var(--ease-out) 760ms both; }
 .boot .film { animation: film-in 700ms var(--ease-out) 680ms both; }
 .boot .bar { animation: appear 400ms var(--ease-out) 680ms both; }
 @keyframes focus { from { opacity: 0; filter: blur(var(--blur-focus)); transform: translateY(8px); } 60% { opacity: 1; } to { opacity: 1; filter: blur(0); transform: none; } }
