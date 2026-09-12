@@ -10,9 +10,9 @@
 
 | Use | Face | Setting |
 |---|---|---|
-| Wordmark and headings | **Hanken Grotesk** 500 | Wordmark 56–104 px, letter-spacing −0.04em, line-height 0.95. Headings 32–52 px, −0.03em. |
+| Wordmark and headings | **Hanken Grotesk** 500 | Wordmark 72–136 px, letter-spacing −0.04em, line-height 0.95. Headings 32–52 px, −0.03em. |
 | Interface and body text | **Archivo**, width 100, weights 400 / 500 / 600 | Body 16 px / 1.5. Button labels 15 px, weight 600. |
-| Slogan, sentences, menu, notes, step lists | **Hanken Grotesk** 400 (500 for step titles) | Slogan 18–23 px. Sentences 17–21 px. Menu 13 px. Notes 13–14 px. |
+| Slogan, sentences, menu, notes, step lists | **Hanken Grotesk** 400 (500 for step titles) | Slogan 23–30 px. Sentences 17–21 px. Menu 13 px. Notes 13–14 px. |
 | Code, status text, hotkey keycaps, small captions in diagrams | **Fragment Mono**, weight 400 | 11–13 px. Never for headlines, slogans or menu items. |
 | Inside pictures of the app's windows | System stack: `-apple-system, "SF Pro Text", system-ui` | 13 px / 1.5; the Spotlight input 15 px / 1.4; code `SF Mono` 12 px. The picture must match the real window. |
 

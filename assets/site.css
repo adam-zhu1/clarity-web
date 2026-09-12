@@ -40,8 +40,8 @@ kbd { font: 400 .78em/1 var(--f-mono); padding: .3em .45em; border: 1px solid cu
 /* ================================================================ HOME */
 .hero { height: 100dvh; display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); align-items: center; gap: clamp(28px, 5vw, 72px); padding: 80px clamp(20px, 5vw, 72px) 40px; max-width: 1360px; margin-inline: auto; }
 .copy { display: grid; justify-items: start; }
-.wordmark { font-family: var(--f-display); font-weight: 500; font-size: clamp(56px, 7.5vw, 104px); letter-spacing: -.04em; line-height: .95; }
-.slogan { margin-top: 18px; font-size: clamp(18px, 1.8vw, 23px); color: var(--c-mist-70); }
+.wordmark { font-family: var(--f-display); font-weight: 500; font-size: clamp(72px, 9.6vw, 136px); letter-spacing: -.04em; line-height: .95; }
+.slogan { margin-top: 22px; font-size: clamp(23px, 2.35vw, 30px); color: var(--c-mist-70); }
 .cta { margin-top: 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
 .dl { display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 20px; border-radius: 999px; background: var(--c-mint); color: var(--c-mint-ink); font: 500 15px/1 var(--f-sans); transition: transform 120ms var(--ease-out), filter 120ms; }
 .dl:hover { filter: brightness(1.05); }
@@ -54,12 +54,14 @@ kbd { font: 400 .78em/1 var(--f-mono); padding: .3em .45em; border: 1px solid cu
 @media (max-width: 860px) { .hero { height: auto; min-height: 100dvh; grid-template-columns: 1fr; align-content: start; padding-top: 84px; gap: 28px; } body.locked { overflow: auto; } }
 
 /* ---- boot: the word focuses in alone, then the sentence, the button, the film. Every full load. */
-.boot .wordmark { animation: focus var(--t-word) var(--ease-out) 0ms both; }
-.boot .slogan { animation: focus 520ms var(--ease-out) 360ms both; }
-.boot .cta { animation: focus 480ms var(--ease-out) 500ms both; }
-.boot .film { animation: film-in 900ms var(--ease-out) 700ms both; }
-.boot .bar { animation: appear 500ms var(--ease-out) 700ms both; }
+.boot .wordmark { animation: focus-word 1100ms var(--ease-out) 0ms both; will-change: filter, transform, opacity; }
+.boot .slogan { animation: focus 520ms var(--ease-out) 700ms both; }
+.boot .cta { animation: focus 480ms var(--ease-out) 860ms both; }
+.boot .film { animation: film-in 900ms var(--ease-out) 1000ms both; }
+.boot .bar { animation: appear 500ms var(--ease-out) 1000ms both; }
 @keyframes focus { from { opacity: 0; filter: blur(var(--blur-focus)); transform: translateY(8px); } 60% { opacity: 1; } to { opacity: 1; filter: blur(0); transform: none; } }
+/* the word itself: visibly out of focus first, then sharp, like a lens finding it */
+@keyframes focus-word { from { opacity: .35; filter: blur(18px); transform: scale(1.04); } 45% { opacity: 1; } to { opacity: 1; filter: blur(0); transform: none; } }
 @keyframes film-in { from { opacity: 0; transform: translateY(24px) scale(.985); } to { opacity: 1; transform: none; } }
 @keyframes appear { from { opacity: 0; } to { opacity: 1; } }
 
