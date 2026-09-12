@@ -1,59 +1,71 @@
-/* Clarity identity tokens
-   Single source of truth for colour, type, radius and motion.
-   Referenced by the website and by brand/IDENTITY.md. The desktop app should
-   mirror these values in desktop/clarity/ui/shared/base.css. */
+/* Clarity identity tokens · v2 (12 Sep 2026)
+   Single source of truth for colour, type, shape and motion.
+   Documented in brand/IDENTITY.md. The desktop app mirrors the colour and
+   motion values in desktop/clarity/ui/shared/base.css; it uses the system
+   font, not the web faces (see IDENTITY.md §4). */
 
 :root {
-  /* ---- colour: sampled from the app icon */
-  --c-ink:        #0e141c;   /* ground · bottom of the icon's gradient */
-  --c-ink-2:      #141c26;   /* raised surface */
-  --c-ink-3:      #1b2531;   /* panel */
+  /* ---- colour · sampled from the app icon */
+  --c-ink:        #0e141c;   /* ground · the bottom of the icon's gradient. Never #000. */
+  --c-ink-2:      #141c26;   /* raised surface: code blocks, inputs */
+  --c-ink-3:      #1b2531;   /* panels, callouts */
   --c-slate:      #3a4553;   /* mid-tone of the icon square */
   --c-haze:       #a9b4c3;   /* top-left of the icon square */
-  --c-mist:       #eaf0f4;   /* primary text on dark */
-  --c-mist-70:    rgba(234, 240, 244, 0.70);
-  --c-mist-44:    rgba(234, 240, 244, 0.44);
-  --c-line:       rgba(234, 240, 244, 0.10);
+  --c-mist:       #eaf0f4;   /* primary text */
+  --c-mist-70:    rgba(234, 240, 244, 0.70);  /* secondary text, slogan */
+  --c-mist-45:    rgba(234, 240, 244, 0.45);  /* fine print, labels */
+  --c-mist-25:    rgba(234, 240, 244, 0.25);  /* keycap borders */
+  --c-line:       rgba(234, 240, 244, 0.10);  /* hairlines */
   --c-line-2:     rgba(234, 240, 244, 0.20);
-  --c-mint:       #6fd1bd;   /* accent · the magnifier's handle. One button, one link. */
+  --c-mint:       #6fd1bd;   /* THE accent · the magnifier's handle. One button per screen. */
   --c-mint-ink:   #0b1b18;   /* text on mint */
-  --c-lens:       #589da1;   /* glass · secondary, eyebrows, small labels */
+  --c-lens:       #589da1;   /* glass · secondary */
   --c-glass-hi:   #cff8e7;   /* glass highlight · math and emphasis on dark */
-  --c-danger:     #ff8a8a;
+  --c-danger:     #ff8a8a;   /* errors only */
+  --c-paper:      #f7f5ef;   /* the "problem set" card in demos: warm paper, not white */
 
-  /* ---- light counterparts (documented; the site is dark by design) */
-  --c-paper:      #f3f6f8;
-  --c-paper-2:    #ffffff;
-  --c-ink-on-paper: #121b26;
-  --c-mint-on-paper: #3fb39b;
-  --c-lens-on-paper: #3d8d90;
+  /* ---- the app's own window tokens (base.css), used when the site shows the app */
+  --app-panel:    rgba(20, 20, 24, 0.92);
+  --app-text:     rgba(255, 255, 255, 0.92);
+  --app-text-dim: rgba(255, 255, 255, 0.55);
+  --app-text-faint: rgba(255, 255, 255, 0.38);
+  --app-stroke:   rgba(255, 255, 255, 0.10);
+  --app-field:    rgba(255, 255, 255, 0.07);
+  --app-radius:   12px;
+  --app-shadow:   0 12px 32px rgba(0, 0, 0, 0.45);
 
   /* ---- type */
-  --f-sans: "Geist", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-  --f-mono: "Geist Mono", "SF Mono", ui-monospace, Menlo, monospace;
-  --f-math: "STIX Two Text", "Times New Roman", serif;
-  --fs-body: 16px;
-  --fs-small: 14px;
-  --fs-micro: 12px;
-  --fs-h2: clamp(28px, 4vw, 40px);
-  --fs-wordmark: clamp(64px, 12vw, 128px);
-  --lh-body: 1.55;
-  --ls-display: -0.04em;
-  --ls-eyebrow: 0.08em;
+  --f-sans:    "Archivo", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --f-display: "Archivo", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --f-mono:    "Fragment Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --f-math:    "STIX Two Text", "Times New Roman", serif;
+  --f-app:     -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;  /* inside app-window replicas only */
+  --display-stretch: 122%;             /* the wordmark is Archivo at width 122 */
+  --display-weight: 500;
+  --display-track: -0.02em;
+  --fs-wordmark: clamp(60px, 7.8vw, 112px);
+  --fs-slogan:   clamp(18px, 1.5vw, 22px);   /* Fragment Mono 400 */
+  --fs-body:     16px;
+  --fs-small:    14px;
+  --fs-nav:      13px;                        /* Fragment Mono 400, +0.01em */
+  --fs-fine:     12.5px;                      /* Fragment Mono 400, +0.01em */
+  --lh-body:     1.5;
 
   /* ---- shape */
-  --r-panel: 12px;
-  --r-control: 10px;
-  --r-icon: 22.37%;         /* macOS icon corner ratio */
+  --r-control:   10px;     /* buttons */
+  --r-panel:     12px;     /* app windows, cards */
+  --r-glass:     999px;    /* the floating menu */
+  --r-icon:      22.37%;   /* macOS icon corner ratio */
 
   /* ---- motion */
-  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);    /* things arriving */
-  --ease-in:  cubic-bezier(0.6, 0, 0.9, 0.4);    /* things leaving */
-  --ease-io:  cubic-bezier(0.65, 0, 0.35, 1);    /* things moving while on screen */
-  --ease-land: cubic-bezier(0.34, 1.25, 0.5, 1); /* the magnifier landing */
-  --t-tap: 120ms;       /* pressed states */
-  --t-hover: 180ms;     /* hover, focus, the app's spotlight box */
-  --t-enter: 420ms;     /* content arriving on a page */
-  --t-page: 560ms;      /* the icon's flight between pages */
-  --blur-focus: 14px;   /* start of any blur-to-focus */
+  --ease-out:  cubic-bezier(0.2, 0.7, 0.2, 1);   /* arriving */
+  --ease-in:   cubic-bezier(0.6, 0, 0.9, 0.4);   /* leaving */
+  --ease-io:   cubic-bezier(0.65, 0, 0.35, 1);   /* moving while on screen */
+  --t-tap:     100ms;   /* keycap press */
+  --t-hover:   160ms;   /* hover, menu pill */
+  --t-spot-in: 180ms;   /* the app's spotlight box arriving (ease-out, scale .96→1) */
+  --t-spot-out: 120ms;  /* leaving (ease-in, scale .98) */
+  --t-result:  150ms;   /* the app's result window fading in */
+  --t-word:    640ms;   /* the wordmark's blur-in */
+  --blur-focus: 8px;    /* start radius of any blur-to-focus. Never above 12. */
 }

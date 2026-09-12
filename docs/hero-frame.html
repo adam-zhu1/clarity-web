@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clarity · hero, the frame</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* One idea: the selection frame. It is the app's gesture (drag a box round a
+ * problem) and the site's only moving part. The boot draws it round the word,
+ * focus spreads out of it, and afterwards it follows hover and keyboard focus. */
+:root {
+  --ink: #0e141c; --ink-2: #141c26;
+  --fg: #eaf0f4; --fg-70: rgba(234,240,244,.70); --fg-45: rgba(234,240,244,.45); --fg-25: rgba(234,240,244,.25);
+  --line: rgba(234,240,244,.10);
+  --mint: #6fd1bd; --mint-ink: #0b1b18; --lens: #7fb8bb;
+  --sans: "Instrument Sans", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --mono: "DM Mono", ui-monospace, Menlo, monospace;
+  --ease-out: cubic-bezier(.2,.7,.2,1); --ease-io: cubic-bezier(.65,0,.35,1);
+  --pad: 22px;              /* frame padding round its target */
+}
+* { box-sizing: border-box; }
+html { background: var(--ink); color-scheme: dark; }
+body { margin: 0; min-height: 100dvh; background: var(--ink); color: var(--fg); font: 16px/1.5 var(--sans); -webkit-font-smoothing: antialiased; overflow: hidden; }
+a { color: inherit; text-decoration: none; }
+kbd { font: 500 .82em/1 var(--mono); padding: .35em .5em; border: 1px solid var(--fg-25); border-bottom-width: 2px; border-radius: 5px; color: inherit; }
+
+.nav { position: absolute; top: 0; left: 0; right: 0; height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(20px, 3vw, 40px); }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 15px; letter-spacing: -.01em; }
+.brand svg { width: 24px; height: 24px; border-radius: 6px; display: block; }
+.nav a.link { font-size: 14px; color: var(--fg-70); padding: 8px 10px; border-radius: 6px; }
+.nav a.link:hover { color: var(--fg); }
+
+.hero { min-height: 100dvh; display: grid; place-items: center; padding: 64px 24px; }
+.stack { display: grid; justify-items: center; text-align: center; gap: 0; max-width: 720px; }
+.wordmark { margin: 0; font-size: clamp(64px, 11vw, 132px); font-weight: 500; letter-spacing: -.045em; line-height: .92; }
+.tagline { margin: 40px 0 0; font-size: clamp(17px, 1.6vw, 20px); line-height: 1.4; color: var(--fg-70); max-width: 34ch; text-wrap: balance; }
+.dl { margin-top: 34px; display: inline-flex; align-items: center; gap: 12px; height: 48px; padding: 0 16px 0 20px; border-radius: 10px; background: var(--mint); color: var(--mint-ink); font-weight: 600; font-size: 15px; }
+.dl kbd { border-color: rgba(11,27,24,.28); color: var(--mint-ink); }
+.fine { margin: 16px 0 0; font: 400 12.5px/1.6 var(--mono); color: var(--fg-45); letter-spacing: .01em; }
+
+/* ---- the frame: four corner ticks, hairline edges, a label */
+.frame { position: absolute; left: 0; top: 0; width: 0; height: 0; pointer-events: none; z-index: 5;
+  border: 1px solid var(--fg-25);
+  transition: left 260ms var(--ease-out), top 260ms var(--ease-out), width 260ms var(--ease-out), height 260ms var(--ease-out), opacity 200ms; }
+.frame i { position: absolute; width: 9px; height: 9px; border: 1.5px solid var(--fg); }
+.frame i:nth-child(1) { left: -1px; top: -1px; border-right: 0; border-bottom: 0; }
+.frame i:nth-child(2) { right: -1px; top: -1px; border-left: 0; border-bottom: 0; }
+.frame i:nth-child(3) { right: -1px; bottom: -1px; border-left: 0; border-top: 0; }
+.frame i:nth-child(4) { left: -1px; bottom: -1px; border-right: 0; border-top: 0; }
+.frame .label { position: absolute; right: -1px; bottom: calc(100% + 10px); font: 400 12px/1 var(--mono); letter-spacing: .04em; color: var(--lens); white-space: nowrap; }
+.frame .label b { font-weight: 400; color: var(--fg-45); }
+
+/* ---- boot. Rest state needs no class; .boot runs it once per load. */
+.boot .frame { animation: draw 460ms var(--ease-out) both; transform-origin: top left; }
+.boot .frame i, .boot .frame .label { animation: appear 200ms 380ms both; }
+.boot .wordmark { animation: focus 620ms var(--ease-out) 300ms both; }
+.boot .tagline  { animation: focus 560ms var(--ease-out) 720ms both; }
+.boot .dl       { animation: focus 520ms var(--ease-out) 860ms both; }
+.boot .fine, .boot .nav { animation: appear 480ms var(--ease-out) 1000ms both; }
+@keyframes draw   { from { transform: scale(0, 0); opacity: 0; } 30% { opacity: 1; } to { transform: none; opacity: 1; } }
+@keyframes appear { from { opacity: 0; } to { opacity: 1; } }
+@keyframes focus  { from { opacity: .35; filter: blur(12px); } to { opacity: 1; filter: blur(0); } }
+/* the label ticks from the thing it selected to what it became */
+.frame .label .a, .frame .label .b { display: inline-block; }
+.frame .label .b { display: none; }
+.boot .frame .label .a { animation: out 200ms 1150ms both; }
+.boot .frame .label .b { display: inline-block; animation: appear 260ms 1300ms both; }
+@keyframes out { to { opacity: 0; visibility: hidden; display: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .boot * { animation-duration: .001ms !important; animation-delay: 0ms !important; }
+  .frame { transition: none; }
+}
+
+/* ---- lab bar */
+.lab { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 20; display: flex; align-items: center; gap: 6px; padding: 7px; font: 400 11px/1 var(--mono); color: var(--fg-45); background: rgba(14,20,28,.7); border: 1px solid var(--line); border-radius: 10px; backdrop-filter: blur(10px); }
+.lab button { font: inherit; color: var(--fg); background: none; border: 1px solid var(--fg-25); border-radius: 6px; padding: 6px 8px; cursor: pointer; }
+.lab button[aria-pressed="true"] { background: var(--fg); color: var(--ink); border-color: var(--fg); }
+.lab .sep { width: 1px; height: 18px; background: var(--fg-25); margin: 0 3px; }
+.lab .name { padding: 0 6px; color: var(--fg-70); max-width: 40ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="#">
+    <svg viewBox="0 0 100 100" aria-hidden="true">
+      <defs>
+        <linearGradient id="sq" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a9b4c3"/><stop offset=".45" stop-color="#3a4553"/><stop offset="1" stop-color="#121b26"/></linearGradient>
+        <radialGradient id="lens" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#cff8e7"/><stop offset=".55" stop-color="#589da1"/><stop offset="1" stop-color="#2f6b72"/></radialGradient>
+        <linearGradient id="handle" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8fe3cf"/><stop offset="1" stop-color="#5cc2ad"/></linearGradient>
+      </defs>
+      <rect x="2" y="2" width="96" height="96" rx="22" fill="url(#sq)"/>
+      <circle cx="50" cy="49" r="29" fill="none" stroke="#fff" stroke-width="9.5" stroke-linecap="round" stroke-dasharray="132 60" transform="rotate(38 50 49)"/>
+      <line x1="66" y1="64" x2="80" y2="78" stroke="url(#handle)" stroke-width="9" stroke-linecap="round"/>
+      <circle cx="52" cy="48" r="18.5" fill="url(#lens)" stroke="#8ddccb" stroke-width="1.6"/>
+    </svg>
+    Clarity
+  </a>
+  <a class="link" href="#" data-target data-label="how it works">How it works</a>
+</nav>
+
+<main class="hero">
+  <div class="stack">
+    <h1 class="wordmark" id="wm" data-target data-label="clarity">Clarity</h1>
+    <p class="tagline" id="tag">Draw a box around the problem. Get it explained.</p>
+    <a class="dl" href="https://github.com/s0hamjain/Clarity/releases/latest" data-target data-label="download">Download for macOS <kbd>D</kbd></a>
+    <p class="fine">Clarity.dmg · macOS 14+ · Apple Silicon · free, open source</p>
+  </div>
+</main>
+
+<div class="frame" id="frame" aria-hidden="true"><i></i><i></i><i></i><i></i><span class="label"><span class="a">problem</span><span class="b">clarity</span></span></div>
+
+<div class="lab" aria-label="Prototype controls">
+  <span class="name" id="tname">tagline 1 of 8</span><span class="sep"></span>
+  <button type="button" id="prev">‹</button><button type="button" id="next">›</button>
+  <span class="sep"></span><button type="button" id="replay">replay ⏎</button>
+</div>
+
+<script>
+(function () {
+  var TAGS = [
+    'Draw a box around the problem. Get it explained.',
+    'The problem in front of you, made clear.',
+    'Point at what’s confusing. Watch it become clear.',
+    'One hotkey. The problem explained, then animated.',
+    'Explanations for the exact problem on your screen.',
+    'Stuck on a problem? Box it. Read it. Watch it.',
+    'Any problem on your screen, explained in seconds and animated in a minute.',
+    'See the problem. Then really see it.'
+  ];
+  var i = +(new URLSearchParams(location.search).get('t') || localStorage.getItem('tag') || 0);
+  var tag = document.getElementById('tag'), tname = document.getElementById('tname');
+  var frame = document.getElementById('frame'), label = frame.querySelector('.label');
+  var wm = document.getElementById('wm');
+
+  function place(el, animate) {
+    var r = el.getBoundingClientRect(), pad = el === wm ? 22 : 10;
+    if (!animate) frame.style.transition = 'none';
+    frame.style.left = (r.left - pad) + 'px'; frame.style.top = (r.top - pad) + 'px';
+    frame.style.width = (r.width + pad * 2) + 'px'; frame.style.height = (r.height + pad * 2) + 'px';
+    if (!animate) { void frame.offsetWidth; frame.style.transition = ''; }
+  }
+  function setTag(n) {
+    i = (n + TAGS.length) % TAGS.length; localStorage.setItem('tag', i);
+    tag.textContent = TAGS[i]; tname.textContent = 'tagline ' + (i + 1) + ' of ' + TAGS.length;
+    place(wm, false);
+  }
+  function boot() {
+    document.documentElement.classList.remove('boot'); void document.documentElement.offsetWidth;
+    place(wm, false);
+    document.documentElement.classList.add('boot');
+  }
+  setTag(i);
+  document.fonts.ready.then(boot);
+
+  /* after the boot, the frame follows hover and keyboard focus, then returns */
+  var home = wm, current = wm;
+  function go(el, text) {
+    current = el; place(el, true);
+    label.innerHTML = '<span class="b" style="display:inline-block">' + text + '</span>';
+  }
+  document.querySelectorAll('[data-target]').forEach(function (el) {
+    el.addEventListener('mouseenter', function () { if (document.documentElement.classList.contains('boot')) go(el, el.dataset.label); });
+    el.addEventListener('focus', function () { go(el, el.dataset.label); });
+    el.addEventListener('mouseleave', function () { go(home, 'clarity'); });
+    el.addEventListener('blur', function () { go(home, 'clarity'); });
+  });
+  addEventListener('resize', function () { place(current, false); });
+
+  document.getElementById('prev').addEventListener('click', function () { setTag(i - 1); });
+  document.getElementById('next').addEventListener('click', function () { setTag(i + 1); });
+  document.getElementById('replay').addEventListener('click', function () { label.innerHTML = '<span class="a">problem</span><span class="b">clarity</span>'; boot(); });
+  addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') setTag(i + 1);
+    else if (e.key === 'ArrowLeft') setTag(i - 1);
+    else if (e.key === 'Enter' || e.key === 'r') { label.innerHTML = '<span class="a">problem</span><span class="b">clarity</span>'; boot(); }
+    else if (/^[1-8]$/.test(e.key)) setTag(+e.key - 1);
+  });
+})();
+</script>
+</body>
+</html>
