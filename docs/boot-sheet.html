@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clarity · seven boots, frame by frame</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root { --paper: #eef2f7; --ink: #121b26; --ink-70: rgba(18,27,38,.72); --ink-45: rgba(18,27,38,.48); --line: rgba(18,27,38,.12); --lens: #3d8d90;
+  --sans: "Manrope", system-ui, sans-serif; --mono: "Geist Mono", ui-monospace, Menlo, monospace; }
+* { box-sizing: border-box }
+body { margin: 0; padding: 28px clamp(14px,2.5vw,32px) 56px; background: var(--paper); color: var(--ink); font: 15px/1.5 var(--sans); -webkit-font-smoothing: antialiased }
+h1 { margin: 0 0 4px; font-size: 24px; font-weight: 700; letter-spacing: -.03em }
+.sub { margin: 0 0 22px; color: var(--ink-70); max-width: 80ch; font-size: 14px }
+.sub a { color: var(--ink) }
+.strip { margin-bottom: 22px }
+.head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 7px }
+.head h2 { margin: 0; font-size: 15px; font-weight: 700 }
+.head .why { font-size: 13px; color: var(--ink-70) }
+.head .why b { font: 400 11px/1 var(--mono); color: var(--lens) }
+.frames { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px }
+.f { min-width: 0 }
+.shot { position: relative; aspect-ratio: 16/10; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #fff }
+.shot iframe { position: absolute; left: 0; top: 0; width: 1440px; height: 900px; border: 0; transform-origin: 0 0 }
+.t { margin-top: 5px; font: 400 11px/1.4 var(--mono); color: var(--ink-45) }
+</style>
+</head>
+<body>
+<h1>Seven boots for the hero, frame by frame</h1>
+<p class="sub">Each row is one boot, scrubbed to a few moments. Stills can't judge motion — open the <a href="boot-lab.html">boot lab</a> and press <b>1</b>–<b>7</b> to play them, <b>t</b> to switch paper/ink, <b>⏎</b> to replay. Nothing here runs past 2.4 s.</p>
+
+<div id="sheet"></div>
+
+<script>
+var THEME = new URLSearchParams(location.search).get('theme') || 'paper';
+var BOOTS = [
+  { n: 1, name: 'focus',             why: 'the identity recipe, nothing else: blur plus a tracking change, so it reads as focus and not as a fade', t: [150, 500, 900, 1400] },
+  { n: 2, name: 'spin-land',         why: 'the magnifier rotates −300° on --ease-land, settles, then docks into the corner', t: [300, 900, 1450, 2350] },
+  { n: 3, name: 'lens sweep',        why: 'the glass crosses the viewport and the page sharpens as it passes — the name performed on the page itself', t: [250, 700, 1200, 1800] },
+  { n: 4, name: 'through the glass', why: 'we open inside the lens; the glass and ring pass outward and the page is on the far side', t: [120, 600, 1100, 2000] },
+  { n: 5, name: 'capture',           why: 'the hotkey happens to the page: keys, selection, flash, resolve', t: [400, 780, 1250, 1900] },
+  { n: 6, name: 'ring draw',         why: 'the mark is built — ring drawn, handle extended, glass popped — then it docks', t: [300, 800, 1350, 2100] },
+  { n: 7, name: 'search',            why: '1 and 3 combined: the glass hunts across a word it cannot read, overshoots, hesitates, comes back and locks on — see the <a href="boot7-sheet.html">full sheet</a>', t: [340, 700, 1230, 1640, 1810] }
+];
+
+var sheet = document.getElementById('sheet');
+BOOTS.forEach(function (b) {
+  var strip = document.createElement('div');
+  strip.className = 'strip';
+  strip.innerHTML = '<div class="head"><h2>' + b.n + ' · ' + b.name + '</h2><span class="why">' + b.why + '</span></div>' +
+    '<div class="frames">' + b.t.map(function (t) {
+      return '<div class="f"><div class="shot"><iframe loading="eager" data-t="' + t +
+        '" src="boot-lab.html?boot=' + b.n + '&theme=' + THEME + '" title="boot ' + b.n + ' at ' + t + 'ms"></iframe></div>' +
+        '<div class="t">' + (t / 1000).toFixed(2) + ' s</div></div>';
+    }).join('') + '</div>';
+  sheet.appendChild(strip);
+});
+
+/* Scrub each frame with the Web Animations API, then hold it there. */
+function scrub(frame) {
+  var doc = frame.contentDocument;
+  if (!doc) return;
+  var t = +frame.dataset.t;
+  doc.getAnimations().forEach(function (a) {
+    a.pause();
+    try { a.currentTime = t; } catch (e) {}
+  });
+  var lab = doc.querySelector('.lab');
+  if (lab) lab.remove();
+}
+
+function fit() {
+  document.querySelectorAll('.shot').forEach(function (s) {
+    s.querySelector('iframe').style.transform = 'scale(' + (s.clientWidth / 1440) + ')';
+  });
+}
+
+document.querySelectorAll('iframe').forEach(function (f) {
+  f.addEventListener('load', function () { setTimeout(function () { scrub(f); }, 60); });
+});
+addEventListener('resize', fit);
+addEventListener('load', function () { fit(); setTimeout(function () {
+  document.querySelectorAll('iframe').forEach(scrub);
+}, 400); });
+fit();
+</script>
+</body>
+</html>

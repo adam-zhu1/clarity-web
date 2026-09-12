@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clarity · boot 7, the hunt</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root { --paper: #eef2f7; --ink: #121b26; --ink-70: rgba(18,27,38,.72); --ink-45: rgba(18,27,38,.48); --line: rgba(18,27,38,.12); --lens: #3d8d90;
+  --sans: "Manrope", system-ui, sans-serif; --mono: "Geist Mono", ui-monospace, Menlo, monospace; }
+* { box-sizing: border-box }
+body { margin: 0; padding: 26px clamp(14px,2.5vw,32px) 56px; background: var(--paper); color: var(--ink); font: 15px/1.5 var(--sans); -webkit-font-smoothing: antialiased }
+h1 { margin: 0 0 4px; font-size: 23px; font-weight: 700; letter-spacing: -.03em }
+.sub { margin: 0 0 22px; color: var(--ink-70); max-width: 84ch; font-size: 14px }
+.sub a { color: var(--ink) }
+h2 { margin: 0 0 8px; font-size: 14px; font-weight: 700 }
+.strip { margin-bottom: 24px }
+.frames { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px }
+.shot { position: relative; aspect-ratio: 16/10; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #fff }
+.shot iframe { position: absolute; left: 0; top: 0; width: 1440px; height: 900px; border: 0; transform-origin: 0 0 }
+.t { margin-top: 5px; font: 400 11px/1.4 var(--mono); color: var(--ink-45) }
+.t b { color: var(--lens); font-weight: 500 }
+</style>
+</head>
+<body>
+<h1>Boot 7 · the hunt, frame by frame</h1>
+<p class="sub">The glass enters from the left, crosses the word it cannot read, overshoots right, hesitates, sweeps back too far, then scans in and locks onto <b>Clarity</b> — and the focus spreads out of the glass. Stills can't judge motion: open the <a href="boot-lab.html?boot=7">boot lab</a> and press <b>s</b> to hear it at 1.8 s, 2.4 s and 3.0 s.</p>
+
+<div id="sheet"></div>
+
+<script>
+/* the moments that decide whether the hunt reads: entrance, first crossing,
+   the overshoot, the hesitation, the sweep back, the scan, the lock, the spread */
+var FRAMES = [
+  [ 120, 'entering'], [ 340, 'first pass'], [ 700, 'overshot right'], [ 830, 'hesitating'],
+  [1230, 'back too far'], [1520, 'scanning in'], [1640, 'locking'], [1810, 'spreading']
+];
+var THEMES = [['ink', 'ink'], ['paper', 'paper']];
+
+var sheet = document.getElementById('sheet');
+THEMES.forEach(function (th) {
+  var strip = document.createElement('div');
+  strip.className = 'strip';
+  strip.innerHTML = '<h2>' + th[1] + '</h2><div class="frames">' + FRAMES.map(function (f) {
+    return '<div><div class="shot"><iframe loading="eager" data-t="' + f[0] +
+      '" src="boot-lab.html?boot=7&theme=' + th[0] + '" title="boot 7 at ' + f[0] + 'ms"></iframe></div>' +
+      '<div class="t">' + (f[0] / 1000).toFixed(2) + ' s · <b>' + f[1] + '</b></div></div>';
+  }).join('') + '</div>';
+  sheet.appendChild(strip);
+});
+
+function scrub(frame) {
+  var doc = frame.contentDocument;
+  if (!doc) return;
+  var t = +frame.dataset.t;
+  doc.getAnimations().forEach(function (a) {
+    a.pause();
+    try { a.currentTime = t; } catch (e) {}
+  });
+  var lab = doc.querySelector('.lab');
+  if (lab) lab.remove();
+}
+
+function fit() {
+  document.querySelectorAll('.shot').forEach(function (s) {
+    s.querySelector('iframe').style.transform = 'scale(' + (s.clientWidth / 1440) + ')';
+  });
+}
+
+document.querySelectorAll('iframe').forEach(function (f) {
+  f.addEventListener('load', function () { setTimeout(function () { scrub(f); }, 60); });
+});
+addEventListener('resize', fit);
+addEventListener('load', function () { fit(); setTimeout(function () {
+  document.querySelectorAll('iframe').forEach(scrub);
+}, 400); });
+fit();
+</script>
+</body>
+</html>

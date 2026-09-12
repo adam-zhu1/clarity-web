@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proto 1 · paper · the problem is the hero</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=STIX+Two+Text:ital@0;1&display=swap">
+<style>
+:root {
+  --paper: #eef2f7; --paper-2: #fff; --paper-3: #e3e9f1;
+  --ink: #121b26; --ink-70: rgba(18,27,38,.72); --ink-45: rgba(18,27,38,.48);
+  --line: rgba(18,27,38,.10); --line-2: rgba(18,27,38,.18);
+  --mint: #5cc6b0; --mint-ink: #0b1b18; --lens: #3d8d90;
+  --sans: "Manrope", -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --math: "STIX Two Text", Georgia, serif;
+  --ease-out: cubic-bezier(.2,.7,.2,1); --ease-in: cubic-bezier(.6,0,.9,.4); --ease-io: cubic-bezier(.65,0,.35,1);
+  /* the app's own tokens, unchanged from desktop/clarity/ui/shared/base.css */
+  --panel: rgba(20,20,24,.92); --text: rgba(255,255,255,.92); --text-dim: rgba(255,255,255,.55);
+  --text-faint: rgba(255,255,255,.38); --stroke: rgba(255,255,255,.10); --field: rgba(255,255,255,.07);
+  --s: 1;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; overflow: hidden; background: var(--paper); color: var(--ink);
+  font: 16px/1.55 var(--sans); -webkit-font-smoothing: antialiased;
+}
+.bg { position: fixed; inset: 0; overflow: hidden; pointer-events: none; }
+.bg i { position: absolute; border-radius: 50%; filter: blur(90px); }
+.bg i:nth-child(1) { width: 52vw; height: 52vw; left: -14vw; bottom: -18vw; background: #cfe6ef; opacity: .75; animation: drift 90s ease-in-out infinite; }
+.bg i:nth-child(2) { width: 40vw; height: 40vw; right: -8vw; top: -14vw; background: #d7f1ea; opacity: .7; animation: drift 90s ease-in-out infinite reverse; }
+@keyframes drift { 0%,100% { transform: none } 50% { transform: translate3d(3vw,-2vw,0) scale(1.06) } }
+
+/* ---------------------------------------------------------------- page */
+.page { position: relative; height: 100%; display: grid; grid-template-rows: auto 1fr; padding: 0 clamp(20px, 6vw, 104px); }
+
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 72px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -.03em; font-size: 17px; }
+.brand svg { width: 28px; height: 28px; border-radius: 7px; display: block; }
+.nav-right { display: flex; align-items: center; gap: clamp(12px, 2vw, 26px); }
+.nav-link { color: var(--ink-70); text-decoration: none; font-size: 14.5px; font-weight: 500; }
+.nav-link:hover { color: var(--ink); }
+.dl {
+  display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+  background: var(--mint); color: var(--mint-ink); font-weight: 700; font-size: 14.5px;
+  padding: 10px 16px; border-radius: 10px; box-shadow: 0 8px 20px rgba(92,198,176,.34);
+}
+.dl kbd { font: 500 11px/1 var(--mono); border: 1px solid rgba(11,27,24,.22); border-radius: 4px; padding: 3px 5px; }
+
+/* the worksheet is the page itself — no card, no laptop */
+.work { align-self: center; max-width: 900px; }
+.qblock { position: relative; }
+.eyebrow { font: 500 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--lens); }
+.problem { margin: 18px 0 0; font: 400 clamp(28px, 4.4vw, 54px)/1.25 var(--math); letter-spacing: -.01em; }
+.problem em { font-style: italic; }
+.rule { height: 8px; border-radius: 4px; background: var(--line); margin-top: 26px; }
+.rule.s { width: 56%; margin-top: 12px; }
+
+.foot { margin-top: clamp(28px, 5vh, 56px); display: grid; gap: 8px; max-width: 560px; }
+.tagline { margin: 0; font-size: clamp(17px, 1.6vw, 21px); font-weight: 500; letter-spacing: -.02em; }
+.fine { margin: 0; font: 400 13px/1.5 var(--mono); color: var(--ink-45); }
+
+/* ------------------------------------------------- boot: focus-in */
+.focusable { opacity: .25; filter: blur(14px); }
+.is-focus .focusable { opacity: 1; filter: blur(0px); transition: opacity 420ms var(--ease-out), filter 420ms var(--ease-out); }
+
+/* ------------------------------------------------- the capture */
+.keys {
+  position: fixed; left: 50%; bottom: 14vh; transform: translateX(-50%); display: flex; gap: 8px;
+  opacity: 0; transition: opacity 180ms var(--ease-out);
+}
+.is-keys .keys { opacity: 1; }
+.keys kbd {
+  font: 500 20px/1 var(--mono); color: var(--ink); background: var(--paper-2);
+  border: 1px solid var(--line-2); border-bottom-width: 3px; border-radius: 9px; padding: 13px 15px;
+  box-shadow: 0 6px 16px rgba(18,27,38,.10); transition: transform 120ms var(--ease-out), border-bottom-width 120ms var(--ease-out);
+}
+.keys kbd.down { transform: translateY(2px); border-bottom-width: 1px; }
+
+/* the dim is the marquee's own outer shadow, so the selection is a clear hole */
+.capture { position: absolute; inset: -10px -14px; opacity: 0; transition: opacity 200ms var(--ease-out); pointer-events: none; }
+.is-capture .capture { opacity: 1; }
+.marquee {
+  position: absolute; left: 0; top: 0; width: 0; height: 0;
+  border: 1px dashed rgba(255,255,255,.9); border-radius: 3px;
+  box-shadow: 0 0 0 200vmax rgba(18,27,38,.34);
+  transition: width 620ms var(--ease-io), height 620ms var(--ease-io);
+}
+.is-drag .marquee { width: 100%; height: 100%; }
+
+/* ------------------------------------------------- the app's windows */
+.app { position: fixed; inset: 0; pointer-events: none; }
+
+/* spotlight: 680×96, 4px shadow gutter, per spotlight.css */
+/* below the selection, not on top of it: on a hero, hiding the headline reads as a bug */
+.spotlight {
+  position: absolute; left: 50%; top: 64%; width: 680px; height: 96px; padding: 4px;
+  transform: translate(-50%,-50%) scale(calc(var(--s) * .96)); opacity: 0;
+  transition: opacity 180ms var(--ease-out), transform 180ms var(--ease-out);
+}
+.is-spot .spotlight { opacity: 1; transform: translate(-50%,-50%) scale(var(--s)); }
+.is-spot-out .spotlight { opacity: 0; transform: translate(-50%,-50%) scale(calc(var(--s) * .98)); transition-duration: 120ms; transition-timing-function: var(--ease-in); }
+.panel {
+  height: 100%; background: var(--panel); border: .5px solid var(--stroke); border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0,0,0,.45); overflow: hidden; color: var(--text);
+  font: 13px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+}
+.row { display: flex; align-items: center; gap: 12px; height: 88px; padding: 0 14px; }
+.thumb {
+  width: 64px; height: 48px; flex: none; border-radius: 6px; border: .5px solid var(--stroke);
+  background: #fbfaf6; color: #333; display: grid; place-items: center; font: italic 11px var(--math); overflow: hidden;
+}
+.field { flex: 1; min-width: 0; font: 15px/1.4 -apple-system, BlinkMacSystemFont, system-ui, sans-serif; }
+.caret { display: inline-block; width: 1.5px; height: 17px; background: var(--mint); vertical-align: -3px; animation: blink 1.06s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0 } }
+.hint { display: flex; gap: 4px; flex: none; color: var(--text-faint); }
+.hint kbd { font: inherit; padding: 2px 6px; border: .5px solid var(--stroke); border-radius: 5px; background: var(--field); }
+.hint kbd.flash { background: rgba(255,255,255,.28); color: #fff; }
+
+/* result: 440×680, fades in over 150ms, per result.css */
+.result {
+  position: absolute; right: clamp(20px, 5vw, 88px); top: 50%; width: 440px; height: 680px; padding: 4px;
+  transform: translateY(-50%) scale(var(--s)); transform-origin: right center;
+  opacity: 0; transition: opacity 150ms var(--ease-out);
+}
+.is-result .result { opacity: 1; }
+.result .panel { display: flex; flex-direction: column; }
+.header { display: flex; align-items: center; justify-content: space-between; flex: none; height: 34px; padding: 0 8px 0 14px; border-bottom: .5px solid var(--stroke); }
+.title { font-size: 12px; font-weight: 500; letter-spacing: .02em; color: var(--text-dim); }
+.close { width: 22px; height: 22px; border: none; border-radius: 5px; background: none; color: var(--text-dim); font-size: 11px; }
+.body { flex: 1; min-height: 0; padding: 12px 16px 18px; }
+.status { font-size: 12px; color: var(--text-dim); }
+.status.working::after { content: ""; display: inline-block; width: 4px; height: 4px; margin-left: 6px; vertical-align: 2px; border-radius: 50%; background: var(--mint); animation: pulse 1.4s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { opacity: .25 } 50% { opacity: 1 } }
+.status.done { color: var(--text-faint); }
+.explanation { margin-top: 12px; }
+.explanation > * { margin: 0 0 10px; opacity: 0; transform: translateY(8px); }
+.explanation.in > * { opacity: 1; transform: none; transition: opacity 300ms var(--ease-out), transform 300ms var(--ease-out); }
+.explanation.in > *:nth-child(2) { transition-delay: 90ms }
+.explanation.in > *:nth-child(3) { transition-delay: 180ms }
+.explanation.in > *:nth-child(4) { transition-delay: 270ms }
+.explanation.in > *:nth-child(5) { transition-delay: 360ms }
+.explanation.in > *:nth-child(6) { transition-delay: 450ms }
+.explanation ul { padding-left: 18px; }
+.explanation li + li { margin-top: 4px; }
+.explanation .math { padding: 8px 0; }
+.explanation em { font-family: var(--math); font-style: italic; font-size: 1.08em; color: #cff8e7; }
+.clip-wrap { margin-top: 14px; opacity: 0; transition: opacity 300ms var(--ease-out); }
+.is-clip .clip-wrap { opacity: 1; }
+.clip { display: block; width: 100%; border-radius: 8px; background: #000; }
+.clip .curve { stroke-dasharray: 420; stroke-dashoffset: 420; animation: draw 3s var(--ease-io) infinite; }
+@keyframes draw { 0% { stroke-dashoffset: 420 } 55%,100% { stroke-dashoffset: 0 } }
+
+/* ------------------------------------------------- dev chrome (not part of the design) */
+.dev {
+  position: fixed; right: 12px; bottom: 12px; z-index: 9; display: flex; align-items: center; gap: 10px;
+  font: 400 11px/1 var(--mono); color: var(--ink-45); background: rgba(255,255,255,.72);
+  border: 1px solid var(--line); border-radius: 8px; padding: 7px 9px; backdrop-filter: blur(8px);
+}
+.dev button, .dev a { font: inherit; color: var(--ink); background: none; border: 1px solid var(--line-2); border-radius: 5px; padding: 4px 7px; text-decoration: none; }
+
+@media (max-width: 1180px) { :root { --s: .78 } }
+@media (max-width: 860px) {
+  :root { --s: .54 }
+  .result { right: 50%; transform: translate(50%,-50%) scale(var(--s)); transform-origin: center; }
+  .problem { font-size: clamp(24px, 6.6vw, 34px) }
+  .nav-link { display: none }
+}
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important } }
+.frozen *, .frozen *::after, .frozen *::before { transition-duration: 0s !important; animation: none !important }
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"><i></i><i></i></div>
+
+<div class="page">
+  <nav class="nav focusable">
+    <span class="brand">
+      <svg viewBox="0 0 100 100" aria-label="Clarity" role="img">
+        <defs>
+          <linearGradient id="sq" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a9b4c3"/><stop offset=".45" stop-color="#3a4553"/><stop offset="1" stop-color="#121b26"/></linearGradient>
+          <radialGradient id="lens" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#cff8e7"/><stop offset=".55" stop-color="#589da1"/><stop offset="1" stop-color="#2f6b72"/></radialGradient>
+          <linearGradient id="handle" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8fe3cf"/><stop offset="1" stop-color="#5cc2ad"/></linearGradient>
+        </defs>
+        <rect x="2" y="2" width="96" height="96" rx="22" fill="url(#sq)"/>
+        <circle cx="50" cy="49" r="29" fill="none" stroke="#fff" stroke-width="9.5" stroke-linecap="round" stroke-dasharray="132 60" transform="rotate(38 50 49)"/>
+        <line x1="66" y1="64" x2="80" y2="78" stroke="url(#handle)" stroke-width="9" stroke-linecap="round"/>
+        <circle cx="52" cy="48" r="18.5" fill="url(#lens)" stroke="#8ddccb" stroke-width="1.6"/>
+      </svg>
+      Clarity
+    </span>
+    <span class="nav-right">
+      <a class="nav-link" href="#">How it works</a>
+      <a class="dl" href="#">Download for macOS <kbd>D</kbd></a>
+    </span>
+  </nav>
+
+  <div class="work">
+    <div class="qblock">
+      <div class="focusable">
+        <span class="eyebrow">Problem set 4 · Q3</span>
+        <p class="problem">Let <em>f(x) = x² sin x</em>. Find <em>f′(π)</em>.</p>
+        <div class="rule"></div>
+        <div class="rule s"></div>
+      </div>
+      <div class="capture" aria-hidden="true"><div class="marquee"></div></div>
+    </div>
+
+    <div class="foot focusable">
+      <p class="tagline">A hotkey that explains any problem on your screen.</p>
+      <p class="fine">Clarity.dmg · macOS 14+ · Apple Silicon · Free, open source</p>
+    </div>
+  </div>
+</div>
+
+<div class="keys" aria-hidden="true"><kbd>⌘</kbd><kbd>⇧</kbd><kbd>E</kbd></div>
+
+<div class="app" aria-hidden="true">
+  <div class="spotlight">
+    <div class="panel">
+      <div class="row">
+        <div class="thumb">f′(π)</div>
+        <div class="field"><span id="typed"></span><span class="caret"></span></div>
+        <div class="hint"><kbd>↓</kbd><kbd id="enter">↵</kbd></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="result">
+    <div class="panel">
+      <header class="header"><span class="title">Clarity</span><button class="close">✕</button></header>
+      <div class="body">
+        <div class="status working" id="status">Reading the problem…</div>
+        <div class="explanation" id="explanation">
+          <p>Both <em>x²</em> and <em>sin x</em> depend on <em>x</em>, so this is the product rule: differentiate one factor at a time and add.</p>
+          <p class="math"><em>f′(x) = 2x sin x + x² cos x</em></p>
+          <p>Now put <em>x = π</em> into each term.</p>
+          <ul>
+            <li><em>2x sin x</em> → <em>2π · sin π = 2π · 0 = 0</em></li>
+            <li><em>x² cos x</em> → <em>π² · cos π = π² · (−1)</em></li>
+          </ul>
+          <p>So nothing happened to the <em>x²</em> — the first term died because <em>sin π</em> is zero. At any other point it would still be there.</p>
+          <p class="math"><em>f′(π) = −π²</em></p>
+        </div>
+        <div class="clip-wrap">
+          <svg class="clip" viewBox="0 0 320 180">
+            <g stroke="rgba(255,255,255,.28)" stroke-width="1"><line x1="28" y1="96" x2="300" y2="96"/><line x1="44" y1="18" x2="44" y2="166"/></g>
+            <path id="c1" class="curve" d="M44 96 C 84 40, 120 44, 150 96 C 180 148, 220 152, 262 60" fill="none" stroke="#5cc6b0" stroke-width="2.5"/>
+            <circle r="4" fill="#ffd166">
+              <animateMotion dur="3s" repeatCount="indefinite" keyPoints="0;0;1" keyTimes="0;0.15;1" calcMode="linear"><mpath href="#c1"/></animateMotion>
+            </circle>
+            <text x="28" y="172" fill="rgba(255,255,255,.45)" font-size="10" font-family="Georgia, serif" font-style="italic">f(x) = x² sin x</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="dev">
+  <b>proto 1</b> · paper · problem is the hero · 7.2 s
+  <button id="replay" type="button">Replay</button>
+  <a href="proto-2-wordmark.html">2</a><a href="proto-3-ink.html">3</a>
+</div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var question = 'why does the x² term vanish?';
+  var typed = document.getElementById('typed');
+  var status = document.getElementById('status');
+  var timers = [];
+
+  function at(ms, fn) { timers.push(setTimeout(fn, ms)); }
+  function on(c) { root.classList.add(c); }
+  function off(c) { root.classList.remove(c); }
+  function setStatus(text, state) { status.textContent = text; status.className = 'status ' + state; }
+
+  function type(text, done) {
+    var i = 0;
+    (function step() {
+      typed.textContent = text.slice(0, ++i);
+      if (i < text.length) at(28 + Math.random() * 44, step); else done && done();
+    })();
+  }
+
+  function reset() {
+    timers.forEach(clearTimeout); timers = [];
+    ['is-focus','is-keys','is-capture','is-drag','is-spot','is-spot-out','is-result','is-clip'].forEach(off);
+    typed.textContent = '';
+    setStatus('Reading the problem…', 'working');
+    document.getElementById('explanation').classList.remove('in');
+    document.querySelectorAll('.keys kbd').forEach(function (k) { k.classList.remove('down'); });
+    document.getElementById('enter').classList.remove('flash');
+  }
+
+  function boot() {
+    reset();
+    if (reduced) { on('is-focus'); on('is-result'); on('is-clip'); typed.textContent = question;
+      setStatus('Done', 'done'); document.getElementById('explanation').classList.add('in'); return; }
+
+    at(60, function () { on('is-focus'); });                       /* page comes into focus */
+    at(620, function () { on('is-keys'); });                       /* ⌘⇧E */
+    [0, 1, 2].forEach(function (n) {
+      at(760 + n * 90, function () { document.querySelectorAll('.keys kbd')[n].classList.add('down'); });
+    });
+    at(1100, function () { on('is-capture'); });                   /* screen dims */
+    at(1260, function () { on('is-drag'); });                      /* box dragged around the problem */
+    at(1980, function () { off('is-keys'); off('is-capture'); });  /* release */
+    at(2060, function () { on('is-spot'); });                      /* the app's box, 180 ms */
+    at(2340, function () { type(question); });
+    at(3700, function () { document.getElementById('enter').classList.add('flash'); });
+    at(3820, function () { on('is-spot-out'); });                  /* Enter, 120 ms out */
+    at(3960, function () { on('is-result'); });                    /* 440×680, 150 ms fade */
+    at(4560, function () { setStatus('Writing explanation…', 'working'); });
+    at(4900, function () { document.getElementById('explanation').classList.add('in'); });
+    at(6100, function () { setStatus('Rendering scene 1 of 3…', 'working'); });
+    at(6700, function () { setStatus('Done', 'done'); on('is-clip'); });
+  }
+
+  /* dev only: ?frame=drag|spot|result|done holds one moment still, for stills */
+  var FRAMES = {
+    focus:  ['is-focus'],
+    drag:   ['is-focus', 'is-keys', 'is-capture', 'is-drag'],
+    spot:   ['is-focus', 'is-spot'],
+    result: ['is-focus', 'is-result'],
+    done:   ['is-focus', 'is-result', 'is-clip']
+  };
+  function freeze(name) {
+    reset();
+    root.classList.add('frozen');
+    FRAMES[name].forEach(on);
+    if (name === 'spot' || name === 'result' || name === 'done') typed.textContent = question;
+    if (name === 'result') { setStatus('Writing explanation…', 'working'); document.getElementById('explanation').classList.add('in'); }
+    if (name === 'done') { setStatus('Done', 'done'); document.getElementById('explanation').classList.add('in'); }
+  }
+
+  var frame = new URLSearchParams(location.search).get('frame');
+  document.getElementById('replay').addEventListener('click', function () { root.classList.remove('frozen'); boot(); });
+  if (frame && FRAMES[frame]) freeze(frame); else boot();
+})();
+</script>
+</body>
+</html>

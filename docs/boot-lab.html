@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en" class="theme-paper">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clarity · boot lab</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* ============================================================ tokens */
+:root {
+  --sans: "Manrope", -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --ease-out: cubic-bezier(.2,.7,.2,1);
+  --ease-in: cubic-bezier(.6,0,.9,.4);
+  --ease-io: cubic-bezier(.65,0,.35,1);
+  --ease-land: cubic-bezier(.34,1.25,.5,1);
+  /* the dock transform for the flying mark, measured at runtime */
+  --dx: 0px; --dy: 0px; --ds: .25;
+}
+.theme-ink {
+  --ground: #0e141c; --ground-2: #141c26;
+  --fg: #eaf0f4; --fg-70: rgba(234,240,244,.70); --fg-44: rgba(234,240,244,.44);
+  --line: rgba(234,240,244,.12); --line-2: rgba(234,240,244,.22);
+  --mint: #6fd1bd; --mint-ink: #0b1b18;
+  --glow-a: #1d3a44; --glow-b: #1a2b3a; --glow-o: .55;
+  --flash: rgba(207,248,231,.55); --dim: rgba(0,0,0,.52);
+  /* how present the out-of-focus word is before the glass finds it */
+  --wm-ghost: .45;
+}
+.theme-paper {
+  --ground: #eef2f7; --ground-2: #ffffff;
+  --fg: #121b26; --fg-70: rgba(18,27,38,.72); --fg-44: rgba(18,27,38,.48);
+  --line: rgba(18,27,38,.10); --line-2: rgba(18,27,38,.18);
+  --mint: #5cc6b0; --mint-ink: #0b1b18;
+  --glow-a: #cfe6ef; --glow-b: #d7f1ea; --glow-o: .75;
+  --flash: rgba(255,255,255,.7); --dim: rgba(18,27,38,.34);
+  /* dark text blurred on a light ground loses more of itself, so keep more of it */
+  --wm-ghost: .68;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+/* the glass's diameter and how far it travels; one pair of numbers per breakpoint */
+:root { --lens-d: 420px; --reach: 840px; }
+@media (max-width: 760px) { :root { --lens-d: 260px; --reach: 480px; } }
+/* on a phone the glass has to stay smaller than the word, or there is nothing
+   left for it to search for */
+@media (max-width: 460px) { :root { --lens-d: 170px; --reach: 320px; } }
+body {
+  margin: 0; overflow: hidden; background: var(--ground); color: var(--fg);
+  font: 16px/1.55 var(--sans); -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================ the hero */
+.bg { position: fixed; inset: 0; overflow: hidden; pointer-events: none; }
+.bg i { position: absolute; border-radius: 50%; filter: blur(90px); opacity: var(--glow-o); }
+.bg i:nth-child(1) { width: 52vw; height: 52vw; left: -14vw; bottom: -20vw; background: var(--glow-a); animation: drift 90s ease-in-out infinite; }
+.bg i:nth-child(2) { width: 40vw; height: 40vw; right: -8vw; top: -16vw; background: var(--glow-b); animation: drift 90s ease-in-out infinite reverse; }
+@keyframes drift { 0%,100% { transform: none } 50% { transform: translate3d(3vw,-2vw,0) scale(1.06) } }
+
+.page { position: relative; height: 100%; display: grid; grid-template-rows: auto 1fr; padding: 0 clamp(20px, 5vw, 56px); }
+
+.nav { display: flex; align-items: center; justify-content: space-between; height: 76px; }
+/* the corner mark exists as the place the icon lands in boots 2 and 6 */
+.mark-hold { position: relative; width: 30px; height: 30px; border-radius: 7px; overflow: hidden; }
+.mark-sm { width: 30px; height: 30px; display: block; border-radius: 7px; }
+/* the only thing that moves once the boot is over: a glint crosses the glass
+   every 20 s, which is the ambient behaviour IDENTITY §5 already allows */
+.sheen {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(100deg, transparent 34%, rgba(255,255,255,.8) 50%, transparent 66%);
+  transform: translateX(-150%); animation: sheen 20s linear infinite;
+}
+@keyframes sheen { 0%, 93% { transform: translateX(-150%) } 100% { transform: translateX(150%) } }
+.nav a { color: var(--fg-70); text-decoration: none; font-size: 14.5px; font-weight: 500; }
+.nav a:hover { color: var(--fg); }
+
+.hero { align-self: center; justify-self: center; text-align: center; padding-bottom: 6vh; position: relative; }
+.wordmark { margin: 0; font-size: clamp(64px, 13vw, 168px); font-weight: 700; letter-spacing: -.045em; line-height: .9; }
+/* wide enough to stay on one line on a desktop; it wraps on its own below ~560px */
+.tagline { margin: 18px auto 0; font-size: clamp(16px, 1.7vw, 21px); font-weight: 500; letter-spacing: -.02em; color: var(--fg-70); max-width: 50ch; }
+.dl {
+  display: inline-flex; align-items: center; gap: 10px; margin-top: 34px; text-decoration: none;
+  background: var(--mint); color: var(--mint-ink); font-weight: 700; font-size: 16px;
+  padding: 15px 22px; border-radius: 12px; box-shadow: 0 12px 28px rgba(92,198,176,.3);
+}
+.dl svg { width: 16px; height: 16px; }
+.dl kbd { font: 500 11px/1 var(--mono); border: 1px solid rgba(11,27,24,.22); border-radius: 4px; padding: 3px 5px; }
+.fine { margin: 16px 0 0; font: 400 13px/1.5 var(--mono); color: var(--fg-44); }
+
+/* ============================================================ boot layers */
+/* All of these are inert and invisible at rest; each boot animates the ones it needs. */
+.flyer { position: fixed; left: 50%; top: 50%; width: 132px; height: 132px; margin: -66px 0 0 -66px; opacity: 0; pointer-events: none; }
+.flyer svg { width: 100%; height: 100%; display: block; }
+/* the sweeping object is the icon's magnifier at scale, not a soft bubble:
+   thick white C open at the lower right, with the glass sitting inside it */
+/* --lens-y is the wordmark's vertical centre, measured at runtime, so the glass
+   sweeps along the word rather than along the middle of the viewport */
+/* everything about the glass is a fraction of --lens-d, so one variable resizes
+   it for a phone; --reach is how far it travels, in the same spirit */
+.lens { position: fixed; left: 50%; top: var(--lens-y, 50%); width: var(--lens-d); height: var(--lens-d);
+  margin: calc(var(--lens-d) / -2) 0 0 calc(var(--lens-d) / -2); opacity: 0; pointer-events: none; }
+.lens .rim { position: absolute; inset: 0; border-radius: 50%; border: calc(var(--lens-d) * .0714) solid #fff; border-right-color: transparent; transform: rotate(38deg); box-shadow: 0 24px 60px rgba(18,27,38,.22); }
+/* a tint, not a fill: whatever is under the glass has to stay readable */
+.lens .disc { position: absolute; inset: calc(var(--lens-d) * .1095); border-radius: 50%; border: 2px solid rgba(141,220,203,.75);
+  background: radial-gradient(circle at 36% 30%, rgba(207,248,231,.20), rgba(88,157,161,.10) 56%, rgba(47,107,114,.08));
+  /* the edge is thick glass: light piles up just inside it and dims right at it */
+  box-shadow: inset 0 0 24px rgba(207,248,231,.18),
+              inset 0 0 0 5px rgba(255,255,255,.06),
+              inset 0 0 14px 8px rgba(18,27,38,.10); }
+/* the rim catches light the way a thick lens does, brightest at the top left */
+.lens .disc::after {
+  content: ""; position: absolute; inset: 5px; border-radius: 50%;
+  border: 1.5px solid transparent; border-top-color: rgba(255,255,255,.55); border-left-color: rgba(255,255,255,.3);
+  transform: rotate(-18deg);
+}
+/* the caustic: the crescent of light a lens throws on its far side */
+.lens .disc::before {
+  content: ""; position: absolute; inset: 2px; border-radius: 50%;
+  background: radial-gradient(circle at 72% 76%, rgba(255,255,255,.16), rgba(255,255,255,0) 42%);
+}
+.lens .stick { position: absolute; right: calc(var(--lens-d) * -.062); bottom: calc(var(--lens-d) * -.0286);
+  width: calc(var(--lens-d) * .281); height: calc(var(--lens-d) * .081); border-radius: calc(var(--lens-d) * .0405);
+  background: linear-gradient(#8fe3cf, #5cc2ad); transform: rotate(45deg); transform-origin: left center; }
+.glass { position: fixed; inset: -10%; opacity: 0; pointer-events: none;
+  background: radial-gradient(circle at 35% 30%, #cff8e7, #589da1 52%, #2f6b72); }
+.ring { position: fixed; left: 50%; top: 50%; width: 66vmin; height: 66vmin; margin: -33vmin 0 0 -33vmin; border-radius: 50%;
+  border: 7vmin solid #fff; border-right-color: transparent; transform: rotate(38deg); opacity: 0; pointer-events: none; }
+.flash { position: fixed; inset: 0; background: var(--flash); opacity: 0; pointer-events: none; }
+.caps { position: absolute; left: 50%; top: calc(100% + 18px); transform: translateX(-50%); display: flex; gap: 7px; opacity: 0; }
+.caps kbd { font: 500 15px/1 var(--mono); color: var(--fg); background: var(--ground-2); border: 1px solid var(--line-2); border-bottom-width: 3px; border-radius: 8px; padding: 10px 12px; }
+/* the selection wraps the wordmark only, and the wordmark sits above the dim,
+   the way a real capture leaves the chosen region bright */
+.wm-wrap { position: relative; display: inline-block; z-index: 3; }
+/* white dashes, because they sit over the dim the way a real capture marquee does */
+.sel { position: absolute; inset: -14px -24px; border: 1.5px dashed rgba(255,255,255,.92); border-radius: 4px; opacity: 0; }
+.dim { position: fixed; inset: 0; background: var(--dim); opacity: 0; pointer-events: none; }
+
+/* ============================================================ shared keyframes */
+@keyframes drift-none { to { transform: none } }
+@keyframes focus-in { from { opacity: .25; filter: blur(12px) } to { opacity: 1; filter: blur(0px) } }
+@keyframes fade-in { from { opacity: 0 } to { opacity: 1 } }
+@keyframes rise { from { opacity: 0; transform: translateY(12px) } to { opacity: 1; transform: none } }
+/* the identity's signature: blur plus a tracking change, so it reads as focus and not as a fade */
+@keyframes wm-focus { from { opacity: .2; filter: blur(16px); letter-spacing: .06em } to { opacity: 1; filter: blur(0px); letter-spacing: -.045em } }
+
+/* ============================================================ boot 1 · focus */
+.boot-1 h1.wordmark { animation: wm-focus 1100ms var(--ease-out) both; }
+.boot-1 .tagline { animation: focus-in 620ms var(--ease-out) 400ms both; }
+.boot-1 .dl { animation: rise 560ms var(--ease-out) 620ms both; }
+.boot-1 .fine { animation: fade-in 520ms var(--ease-out) 820ms both; }
+.boot-1 .nav { animation: fade-in 520ms var(--ease-out) 900ms both; }
+
+/* ============================================================ boot 2 · spin-land */
+/* IDENTITY §5 recipe 2: the magnifier rotates −300°→0 on --ease-land; the square never turns. */
+.boot-2 .flyer { animation: flyer-hold 1080ms both, dock 620ms var(--ease-io) 1140ms both; }
+.boot-2 .flyer .mag { animation: spin 1050ms var(--ease-land) both; transform-origin: 50px 49px; }
+.boot-2 .mark-sm { animation: fade-in 240ms var(--ease-out) 1700ms both; }
+.boot-2 h1.wordmark { animation: wm-focus 900ms var(--ease-out) 1240ms both; }
+.boot-2 .tagline { animation: focus-in 560ms var(--ease-out) 1560ms both; }
+.boot-2 .dl { animation: rise 520ms var(--ease-out) 1700ms both; }
+.boot-2 .fine { animation: fade-in 460ms var(--ease-out) 1840ms both; }
+.boot-2 .nav a { animation: fade-in 460ms var(--ease-out) 1840ms both; }
+@keyframes flyer-hold { from { opacity: 1 } to { opacity: 1 } }
+@keyframes spin { from { transform: rotate(-300deg) } to { transform: rotate(0deg) } }
+@keyframes dock { from { transform: none } to { transform: translate(var(--dx), var(--dy)) scale(var(--ds)); opacity: 0 } }
+
+/* ============================================================ boot 3 · lens sweep */
+/* The glass travels across the viewport and the page sharpens as it passes: the
+   name is the behaviour, performed on the page itself rather than illustrated. */
+.boot-3 .page { animation: unblur 1500ms var(--ease-io) 120ms both; }
+.boot-3 .lens { animation: sweep 1700ms var(--ease-io) both; }
+.boot-3 h1.wordmark { animation: track 1500ms var(--ease-io) 120ms both; }
+@keyframes unblur {
+  0% { opacity: .35; filter: blur(15px) }
+  45% { opacity: .8; filter: blur(7px) }
+  100% { opacity: 1; filter: blur(0px) }
+}
+@keyframes track { from { letter-spacing: .05em } to { letter-spacing: -.045em } }
+@keyframes sweep {
+  0% { opacity: 0; transform: translateX(-62vw) scale(.9) }
+  14% { opacity: 1 }
+  84% { opacity: 1 }
+  100% { opacity: 0; transform: translateX(62vw) scale(.9) }
+}
+
+/* ============================================================ boot 4 · through the glass */
+/* We open inside the lens: the glass fills the viewport, the ring passes, and the
+   page is on the other side. A's zoom, with no laptop and no six seconds. */
+.boot-4 .glass { animation: glass-pass 1500ms var(--ease-io) both; }
+.boot-4 .ring { animation: ring-pass 1500ms var(--ease-io) 60ms both; }
+.boot-4 .page { animation: arrive 1000ms var(--ease-out) 900ms both; }
+@keyframes glass-pass {
+  0% { opacity: 1; transform: scale(1) }
+  55% { opacity: .92; transform: scale(2.4) }
+  100% { opacity: 0; transform: scale(6.5) }
+}
+@keyframes ring-pass {
+  0% { opacity: .95; transform: rotate(38deg) scale(.5) }
+  60% { opacity: .7; transform: rotate(38deg) scale(2.6) }
+  100% { opacity: 0; transform: rotate(38deg) scale(6) }
+}
+@keyframes arrive { from { opacity: 0; filter: blur(14px); transform: scale(1.04) } to { opacity: 1; filter: blur(0px); transform: none } }
+
+/* ============================================================ boot 5 · capture */
+/* The hotkey happens to the page: keys, selection, flash, and the page resolves.
+   States the product's one gesture without putting the app on the homepage. */
+.boot-5 .caps { animation: caps-in 620ms var(--ease-out) 180ms both; }
+.boot-5 .caps kbd { animation: press 160ms var(--ease-out) both; }
+.boot-5 .caps kbd:nth-child(1) { animation-delay: 340ms }
+.boot-5 .caps kbd:nth-child(2) { animation-delay: 420ms }
+.boot-5 .caps kbd:nth-child(3) { animation-delay: 500ms }
+.boot-5 .dim { animation: dim 700ms var(--ease-out) 580ms both; }
+.boot-5 .sel { animation: select 560ms var(--ease-io) 660ms both; }
+.boot-5 .flash { animation: flash 300ms var(--ease-out) 1120ms both; }
+.boot-5 h1.wordmark { animation: wm-focus 760ms var(--ease-out) 1240ms both; }
+.boot-5 .tagline, .boot-5 .fine, .boot-5 .nav { animation: fade-in 520ms var(--ease-out) 1420ms both; }
+.boot-5 .dl { animation: rise 480ms var(--ease-out) 1500ms both; }
+@keyframes caps-in { 0% { opacity: 0; transform: translate(-50%, 8px) } 40%,80% { opacity: 1; transform: translate(-50%, 0) } 100% { opacity: 0; transform: translate(-50%, 0) } }
+@keyframes press { 0%,100% { transform: none } 50% { transform: translateY(3px) } }
+@keyframes select { 0% { opacity: 0; clip-path: inset(0 100% 0 0) } 10% { opacity: 1 } 70% { opacity: 1; clip-path: inset(0 0 0 0) } 100% { opacity: 0; clip-path: inset(0 0 0 0) } }
+@keyframes flash { 0% { opacity: 0 } 30% { opacity: 1 } 100% { opacity: 0 } }
+@keyframes dim { 0% { opacity: 0 } 26%, 74% { opacity: 1 } 100% { opacity: 0 } }
+
+/* ============================================================ boot 6 · ring draw */
+/* The mark is built: ring drawn, handle extended, glass filled, then it docks. */
+.boot-6 .flyer { animation: fade-in 200ms var(--ease-out) both, dock 620ms var(--ease-io) 1260ms both; }
+.boot-6 .flyer .ring-path { animation: draw 780ms var(--ease-io) 140ms both; }
+.boot-6 .flyer .handle-path { animation: draw-handle 420ms var(--ease-out) 760ms both; }
+.boot-6 .flyer .glass-disc { animation: pop 520ms var(--ease-land) 640ms both; transform-origin: 52px 48px; }
+.boot-6 .flyer .glint { animation: fade-in 420ms var(--ease-out) 1000ms both; }
+.boot-6 .mark-sm { animation: fade-in 240ms var(--ease-out) 1820ms both; }
+.boot-6 h1.wordmark { animation: wm-focus 860ms var(--ease-out) 1340ms both; }
+.boot-6 .tagline { animation: focus-in 540ms var(--ease-out) 1620ms both; }
+.boot-6 .dl { animation: rise 500ms var(--ease-out) 1740ms both; }
+.boot-6 .fine, .boot-6 .nav a { animation: fade-in 460ms var(--ease-out) 1880ms both; }
+@keyframes draw { from { stroke-dashoffset: 132 } to { stroke-dashoffset: 0 } }
+@keyframes draw-handle { from { stroke-dashoffset: 22 } to { stroke-dashoffset: 0 } }
+@keyframes pop { from { opacity: 0; transform: scale(.2) } to { opacity: 1; transform: scale(1) } }
+.flyer .ring-path { stroke-dasharray: 132 60; }
+.flyer .handle-path { stroke-dasharray: 22; }
+.flyer .glass-disc, .flyer .glint { opacity: 1; }
+.boot-6 .flyer .glass-disc, .boot-6 .flyer .glint { opacity: 0; }
+
+/* ============================================================ boot 7 · search */
+/* 1 and 3 combined, with intent added: the glass hunts across a page it can't
+ * read, misses, comes back, finds the word, and only then does the page resolve.
+ * A second sharp copy of the wordmark is masked to the glass, so what you see
+ * through the lens is genuinely in focus while everything around it isn't.
+ *
+ * One animated path, two consumers. The properties below are the glass: where
+ * it is, how big it is, how much it magnifies, how it is tilted, whether it is
+ * visible. The lens element transforms by them and the mask is cut by them, so
+ * the two can't drift apart the way two hand-matched keyframe lists would. */
+@property --mx  { syntax: "<length>"; initial-value: 0px;   inherits: true; }
+@property --my  { syntax: "<length>"; initial-value: 0px;   inherits: true; }
+/* the initials are the finished state, so with no animation running the sharp
+   copy lands exactly on the base and the hero still reads */
+@property --mr  { syntax: "<length>"; initial-value: 1700px; inherits: true; }
+@property --mag { syntax: "<number>"; initial-value: 1;      inherits: true; }
+@property --mrot { syntax: "<angle>"; initial-value: 0deg;  inherits: true; }
+@property --mscale { syntax: "<number>"; initial-value: 1;  inherits: true; }
+@property --mop { syntax: "<number>"; initial-value: 0;     inherits: true; }
+
+.wm-sharp {
+  position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  /* scaled about the glass's centre, so the letters under it are genuinely
+     magnified; the mask radius is divided back out so the hole stays --mr */
+  transform-origin: calc(50% + var(--mx)) calc(50% + var(--my));
+  transform: scale(var(--mag));
+  -webkit-mask-image: radial-gradient(circle calc(var(--mr) / var(--mag)) at calc(50% + var(--mx)) calc(50% + var(--my)), #000 76%, rgba(0,0,0,0) 100%);
+  mask-image: radial-gradient(circle calc(var(--mr) / var(--mag)) at calc(50% + var(--mx)) calc(50% + var(--my)), #000 76%, rgba(0,0,0,0) 100%);
+}
+.boot-7 .wm-sharp { opacity: 1; }
+.boot-7 .lens { opacity: var(--mop); transform: translate(var(--mx), var(--my)) rotate(var(--mrot)) scale(var(--mscale)); }
+/* the path itself lives on the root, so every consumer reads the same clock */
+.boot-7 { animation: hunt 1900ms linear both; }
+/* the base copy comes into focus as the mask spreads, so the two cross-dissolve */
+.boot-7 h1.wordmark { animation: unblur-wm 360ms var(--ease-out) 1690ms both; }
+.boot-7 .tagline { animation: focus-in 520ms var(--ease-out) 1750ms both; }
+.boot-7 .dl { animation: rise 500ms var(--ease-out) 1850ms both; }
+.boot-7 .fine, .boot-7 .nav { animation: fade-in 460ms var(--ease-out) 1950ms both; }
+@keyframes unblur-wm { from { opacity: var(--wm-ghost); filter: blur(15px) } to { opacity: 1; filter: blur(0px) } }
+/* Each keyframe carries its own easing, so one animation can still have a fast
+ * entrance, restless hesitation, a decisive sweep and an eased settle. */
+@keyframes hunt {
+  /* comes in from off-screen left, low and tilted, and decelerates */
+  0%   { --mx: calc(var(--reach) * -1);    --my: 6px;   --mrot: -7deg; --mscale: .92; --mop: 0;
+         --mr: calc(var(--lens-d) * .3905); --mag: 1.22;
+         animation-timing-function: cubic-bezier(.16,1,.3,1) }
+  5%   { --mx: calc(var(--reach) * -.738); --mop: 1;    --mscale: 1;   animation-timing-function: cubic-bezier(.4,0,.2,1) }
+  15%  { --mx: calc(var(--reach) * -.333); --my: -14px; --mrot: -3deg; animation-timing-function: linear }
+  23%  { --mx: calc(var(--reach) * .167);  --my: -4px;  --mrot: 3deg;  animation-timing-function: cubic-bezier(.3,0,.3,1) }
+  /* overshoots the word, then hesitates: three small restless nudges */
+  31%  { --mx: calc(var(--reach) * .536);  --my: 12px;  --mrot: 7deg;  animation-timing-function: ease-in-out }
+  35%  { --mx: calc(var(--reach) * .579);  --my: 17px;  --mrot: 8deg;  animation-timing-function: ease-in-out }
+  39%  { --mx: calc(var(--reach) * .514);  --my: 11px;  --mrot: 6deg;  animation-timing-function: ease-in-out }
+  43%  { --mx: calc(var(--reach) * .569);  --my: 15px;  --mrot: 8deg;  animation-timing-function: cubic-bezier(.65,0,.35,1) }
+  /* gives up on the right, sweeps back fast, and again goes too far */
+  55%  { --mx: calc(var(--reach) * -.190); --my: 18px;  --mrot: -3deg; animation-timing-function: cubic-bezier(.3,0,.4,1) }
+  63%  { --mx: calc(var(--reach) * -.536); --my: 10px;  --mrot: -7deg; animation-timing-function: ease-in-out }
+  67%  { --mx: calc(var(--reach) * -.550); --my: 7px;   --mrot: -7deg; animation-timing-function: cubic-bezier(.5,0,.5,1) }
+  /* the slow scan in from the left: this is the part that has to feel searching */
+  79%  { --mx: calc(var(--reach) * -.100); --my: 3px;   --mrot: -1deg; animation-timing-function: cubic-bezier(.2,.7,.3,1) }
+  /* finds it: pushes just past centre, then settles back onto the word */
+  85%  { --mx: calc(var(--reach) * .026);  --my: 0px;   --mrot: .6deg; --mscale: 1.07;
+         animation-timing-function: cubic-bezier(.34,1.4,.64,1) }
+  89%  { --mx: 0px; --my: 0px; --mrot: 0deg; --mscale: 1; --mag: 1.22; --mop: 1;
+         --mr: calc(var(--lens-d) * .3905);
+         animation-timing-function: cubic-bezier(.16,1,.3,1) }
+  /* the focus spreads out of the glass across the word, and the glass lifts off */
+  100% { --mx: 0px; --my: 0px; --mrot: 0deg; --mscale: 1.55; --mag: 1; --mop: 0;
+         --mr: calc(var(--lens-d) * 1.48) }
+}
+
+/* ============================================================ reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 200ms !important; animation-delay: 0ms !important; }
+  .flyer, .lens, .glass, .ring, .flash, .dim, .caps, .sel, .sheen, .wm-sharp { display: none !important; }
+  [class*="boot-"] .page { animation: fade-in 200ms both !important; }
+}
+
+/* ============================================================ lab chrome */
+.lab {
+  position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 20;
+  display: flex; align-items: center; gap: 6px; padding: 7px;
+  font: 400 11px/1 var(--mono); color: var(--fg-44);
+  background: color-mix(in srgb, var(--ground) 72%, transparent);
+  border: 1px solid var(--line); border-radius: 10px; backdrop-filter: blur(10px);
+}
+.lab button { font: inherit; color: var(--fg); background: none; border: 1px solid var(--line-2); border-radius: 6px; padding: 6px 8px; cursor: pointer; }
+.lab button[aria-pressed="true"] { background: var(--fg); color: var(--ground); border-color: var(--fg); }
+.lab .sep { width: 1px; height: 18px; background: var(--line-2); margin: 0 3px; }
+.lab .name { padding: 0 6px; color: var(--fg-70); }
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"><i></i><i></i></div>
+
+<div class="page">
+  <nav class="nav">
+    <span class="mark-hold">
+    <svg class="mark-sm" viewBox="0 0 100 100" role="img" aria-label="Clarity">
+      <defs>
+        <linearGradient id="sq-s" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a9b4c3"/><stop offset=".45" stop-color="#3a4553"/><stop offset="1" stop-color="#121b26"/></linearGradient>
+        <radialGradient id="lens-s" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#cff8e7"/><stop offset=".55" stop-color="#589da1"/><stop offset="1" stop-color="#2f6b72"/></radialGradient>
+        <linearGradient id="handle-s" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8fe3cf"/><stop offset="1" stop-color="#5cc2ad"/></linearGradient>
+      </defs>
+      <rect x="2" y="2" width="96" height="96" rx="22" fill="url(#sq-s)"/>
+      <circle cx="50" cy="49" r="29" fill="none" stroke="#fff" stroke-width="9.5" stroke-linecap="round" stroke-dasharray="132 60" transform="rotate(38 50 49)"/>
+      <line x1="66" y1="64" x2="80" y2="78" stroke="url(#handle-s)" stroke-width="9" stroke-linecap="round"/>
+      <circle cx="52" cy="48" r="18.5" fill="url(#lens-s)" stroke="#8ddccb" stroke-width="1.6"/>
+    </svg>
+    <span class="sheen" aria-hidden="true"></span>
+    </span>
+    <a href="#">How it works</a>
+  </nav>
+
+  <div class="hero">
+    <div class="wm-wrap">
+      <h1 class="wordmark">Clarity</h1>
+      <span class="wordmark wm-sharp" aria-hidden="true">Clarity</span>
+      <div class="sel" aria-hidden="true"></div>
+      <div class="caps" aria-hidden="true"><kbd>⌘</kbd><kbd>⇧</kbd><kbd>E</kbd></div>
+    </div>
+    <p class="tagline">A hotkey that explains any problem on your screen.</p>
+    <a class="dl" href="https://github.com/s0hamjain/Clarity/releases/latest">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8M4.5 7 8 10.5 11.5 7M2.5 13.5h11"/></svg>
+      Download for macOS <kbd>D</kbd>
+    </a>
+    <p class="fine">Clarity.dmg · macOS 14+ · Apple Silicon · Free, open source</p>
+  </div>
+</div>
+
+<!-- boot layers -->
+<div class="glass" aria-hidden="true"></div>
+<div class="ring" aria-hidden="true"></div>
+<div class="lens" aria-hidden="true"><span class="stick"></span><span class="rim"></span><span class="disc"></span></div>
+<div class="dim" aria-hidden="true"></div>
+<div class="flash" aria-hidden="true"></div>
+<div class="flyer" aria-hidden="true">
+  <svg viewBox="0 0 100 100">
+    <defs>
+      <linearGradient id="sq-b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a9b4c3"/><stop offset=".45" stop-color="#3a4553"/><stop offset="1" stop-color="#121b26"/></linearGradient>
+      <radialGradient id="lens-b" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#cff8e7"/><stop offset=".55" stop-color="#589da1"/><stop offset="1" stop-color="#2f6b72"/></radialGradient>
+      <linearGradient id="handle-b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8fe3cf"/><stop offset="1" stop-color="#5cc2ad"/></linearGradient>
+    </defs>
+    <rect x="2" y="2" width="96" height="96" rx="22" fill="url(#sq-b)"/>
+    <g class="mag">
+      <circle class="ring-path" cx="50" cy="49" r="29" fill="none" stroke="#fff" stroke-width="9.5" stroke-linecap="round" transform="rotate(38 50 49)"/>
+      <line class="handle-path" x1="66" y1="64" x2="80" y2="78" stroke="url(#handle-b)" stroke-width="9" stroke-linecap="round"/>
+      <circle class="glass-disc" cx="52" cy="48" r="18.5" fill="url(#lens-b)" stroke="#8ddccb" stroke-width="1.6"/>
+      <ellipse class="glint" cx="45" cy="40" rx="5.5" ry="3" fill="rgba(255,255,255,.7)" transform="rotate(-35 45 40)"/>
+    </g>
+  </svg>
+</div>
+
+<div class="lab">
+  <span class="name" id="name">1 · focus</span>
+  <span class="sep"></span>
+  <button data-boot="1" type="button">1</button>
+  <button data-boot="2" type="button">2</button>
+  <button data-boot="3" type="button">3</button>
+  <button data-boot="4" type="button">4</button>
+  <button data-boot="5" type="button">5</button>
+  <button data-boot="6" type="button">6</button>
+  <button data-boot="7" type="button">7</button>
+  <span class="sep"></span>
+  <button id="speed" type="button" title="length of the whole boot — s">2.4 s</button>
+  <button id="theme" type="button">theme</button>
+  <button id="replay" type="button">replay ⏎</button>
+</div>
+
+<script>
+/* Runs at the end of the body so the dock target can be measured before the
+ * boot class lands, and so nothing is parked invisible waiting on script. */
+(function () {
+  var root = document.documentElement;
+  var NAMES = { 1: 'focus', 2: 'spin-land', 3: 'lens sweep', 4: 'through the glass', 5: 'capture', 6: 'ring draw', 7: 'search' };
+  var params = new URLSearchParams(location.search);
+  var boot = params.get('boot') || localStorage.getItem('boot') || '1';
+  var theme = params.get('theme') || localStorage.getItem('theme') || 'paper';
+  if (!NAMES[boot]) boot = '1';
+
+  function measureDock() {
+    var big = document.querySelector('.flyer'), small = document.querySelector('.mark-sm');
+    var a = big.getBoundingClientRect(), b = small.getBoundingClientRect();
+    root.style.setProperty('--dx', (b.left + b.width / 2 - (a.left + a.width / 2)) + 'px');
+    root.style.setProperty('--dy', (b.top + b.height / 2 - (a.top + a.height / 2)) + 'px');
+    root.style.setProperty('--ds', (b.width / a.width).toFixed(4));
+    var wm = document.querySelector('.wordmark').getBoundingClientRect();
+    root.style.setProperty('--lens-y', (wm.top + wm.height / 2) + 'px');
+  }
+
+  function paint() {
+    root.className = 'theme-' + theme + ' boot-' + boot;
+    document.getElementById('name').textContent = boot + ' · ' + NAMES[boot];
+    document.querySelectorAll('[data-boot]').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.dataset.boot === boot);
+    });
+  }
+
+  /* Every boot is written at 2.4 s. Changing the speed scales the playback rate
+   * of all of them at once, so the internal proportions never change. */
+  var SPEEDS = [2.4, 1.8, 3.0];
+  var speed = +(params.get('speed') || localStorage.getItem('speed') || 2.4);
+  if (SPEEDS.indexOf(speed) < 0) speed = 2.4;
+
+  function applySpeed() {
+    document.getElementById('speed').textContent = speed.toFixed(1) + ' s';
+    var rate = 2.4 / speed;
+    document.getAnimations().forEach(function (a) {
+      var t = a.effect && a.effect.target;
+      if (t && t.classList && t.classList.contains('sheen')) return;  /* ambient, not part of the boot */
+      if (t && t.closest && t.closest('.bg')) return;
+      a.playbackRate = rate;   /* set, not updatePlaybackRate: this applies now */
+    });
+  }
+
+  function play() {
+    root.className = 'theme-' + theme;   /* drop the boot class */
+    void root.offsetWidth;               /* reflow, so the animations restart */
+    measureDock();
+    paint();
+    applySpeed();
+  }
+
+  measureDock();
+  paint();
+  applySpeed();
+  addEventListener('resize', measureDock);
+
+  document.getElementById('speed').addEventListener('click', function () {
+    speed = SPEEDS[(SPEEDS.indexOf(speed) + 1) % SPEEDS.length];
+    localStorage.setItem('speed', speed); play();
+  });
+
+  document.querySelectorAll('[data-boot]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      boot = b.dataset.boot; localStorage.setItem('boot', boot); play();
+    });
+  });
+  document.getElementById('theme').addEventListener('click', function () {
+    theme = theme === 'paper' ? 'ink' : 'paper'; localStorage.setItem('theme', theme); play();
+  });
+  document.getElementById('replay').addEventListener('click', play);
+  addEventListener('keydown', function (e) {
+    if (NAMES[e.key]) { boot = e.key; localStorage.setItem('boot', boot); play(); }
+    else if (e.key === 'Enter' || e.key === 'r') play();
+    else if (e.key === 't') { theme = theme === 'paper' ? 'ink' : 'paper'; localStorage.setItem('theme', theme); play(); }
+    else if (e.key === 's') { speed = SPEEDS[(SPEEDS.indexOf(speed) + 1) % SPEEDS.length]; localStorage.setItem('speed', speed); play(); }
+  });
+})();
+</script>
+</body>
+</html>
