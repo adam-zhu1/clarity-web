@@ -54,11 +54,11 @@ kbd { font: 400 .78em/1 var(--f-mono); padding: .3em .45em; border: 1px solid cu
 @media (max-width: 860px) { .hero { height: auto; min-height: 100dvh; grid-template-columns: 1fr; align-content: start; padding-top: 84px; gap: 28px; } body.locked { overflow: auto; } }
 
 /* ---- boot: the word focuses in alone, then the sentence, the button, the film. Every full load. */
-.boot .wordmark { animation: focus-word 1100ms var(--ease-out) 0ms both; will-change: filter, transform, opacity; }
-.boot .slogan { animation: focus 520ms var(--ease-out) 700ms both; }
-.boot .cta { animation: focus 480ms var(--ease-out) 860ms both; }
-.boot .film { animation: film-in 900ms var(--ease-out) 1000ms both; }
-.boot .bar { animation: appear 500ms var(--ease-out) 1000ms both; }
+.boot .wordmark { animation: focus-word 800ms var(--ease-out) 0ms both; will-change: filter, transform, opacity; }
+.boot .slogan { animation: focus 420ms var(--ease-out) 460ms both; }
+.boot .cta { animation: focus 400ms var(--ease-out) 580ms both; }
+.boot .film { animation: film-in 700ms var(--ease-out) 680ms both; }
+.boot .bar { animation: appear 400ms var(--ease-out) 680ms both; }
 @keyframes focus { from { opacity: 0; filter: blur(var(--blur-focus)); transform: translateY(8px); } 60% { opacity: 1; } to { opacity: 1; filter: blur(0); transform: none; } }
 /* the word itself: visibly out of focus first, then sharp, like a lens finding it */
 @keyframes focus-word { from { opacity: .35; filter: blur(18px); transform: scale(1.04); } 45% { opacity: 1; } to { opacity: 1; filter: blur(0); transform: none; } }
@@ -71,10 +71,10 @@ kbd { font: 400 .78em/1 var(--f-mono); padding: .3em .45em; border: 1px solid cu
 .sec.dark { background: transparent; color: var(--c-mist); }
 .sec.light { background: var(--c-paper-2); color: var(--c-ink-on-paper); --c-mist: var(--c-ink-on-paper); --c-mist-70: rgba(18,27,38,.72); --c-mist-45: rgba(18,27,38,.5); --c-mint: var(--c-mint-on-paper); }
 .sec.last { padding-bottom: 40px; }
-.focus { opacity: 0; filter: blur(8px); transform: translateY(8px); transition: opacity 640ms var(--ease-out), filter 640ms var(--ease-out), transform 640ms var(--ease-out); }
+.focus { opacity: 0; filter: blur(8px); transform: translateY(8px); transition: opacity 480ms var(--ease-out), filter 480ms var(--ease-out), transform 480ms var(--ease-out); }
 .focus.in { opacity: 1; filter: blur(0); transform: none; }
-.line.focus { transition-delay: 160ms; }
-.reveal > * { opacity: 0; transform: translateY(14px); transition: opacity 560ms var(--ease-out), transform 560ms var(--ease-out); }
+.line.focus { transition-delay: 100ms; }
+.reveal > * { opacity: 0; transform: translateY(14px); transition: opacity 420ms var(--ease-out), transform 420ms var(--ease-out); }
 .reveal.in > * { opacity: 1; transform: none; }
 .reveal.in > *:nth-child(2) { transition-delay: 60ms; } .reveal.in > *:nth-child(3) { transition-delay: 120ms; } .reveal.in > *:nth-child(4) { transition-delay: 180ms; }
 .reveal.in > *:nth-child(5) { transition-delay: 240ms; } .reveal.in > *:nth-child(6) { transition-delay: 300ms; } .reveal.in > *:nth-child(7) { transition-delay: 360ms; } .reveal.in > *:nth-child(8) { transition-delay: 420ms; }
@@ -83,7 +83,7 @@ kbd { font: 400 .78em/1 var(--f-mono); padding: .3em .45em; border: 1px solid cu
 
 /* 1 · the real captures */
 .shots { position: relative; width: 100%; height: min(60vh, 560px); }
-.shot { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(.98); opacity: 0; transition: opacity 420ms var(--ease-out), transform 420ms var(--ease-out); filter: drop-shadow(0 30px 60px rgba(0,0,0,.5)); }
+.shot { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(.98); opacity: 0; transition: opacity 300ms var(--ease-out), transform 300ms var(--ease-out); filter: drop-shadow(0 30px 60px rgba(0,0,0,.5)); }
 .shot.spot { width: min(100%, 680px); height: auto; }
 .shot.res { width: auto; height: 100%; }
 .shot.on { opacity: 1; transform: translate(-50%, -50%); }
@@ -105,7 +105,7 @@ kbd { font: 400 .78em/1 var(--f-mono); padding: .3em .45em; border: 1px solid cu
 .flow .el { font: 400 12px var(--f-mono); fill: rgba(18,27,38,.5); opacity: 0; transition: opacity 300ms; }
 .flow .el.on { opacity: 1; }
 .flow .pk { fill: var(--c-ink-on-paper); opacity: 0; offset-rotate: 0deg; }
-.flow .pk.go { opacity: 1; offset-path: var(--path); animation: travel 800ms var(--ease-io) both; }
+.flow .pk.go { opacity: 1; offset-path: var(--path); animation: travel 600ms var(--ease-io) both; }
 .flow .pk.mint { fill: var(--c-mint-on-paper); } .flow .pk.amber { fill: #b5820e; }
 @keyframes travel { from { offset-distance: 0%; } to { offset-distance: 100%; } }
 .be-status { margin-top: 22px; justify-self: center; display: inline-flex; align-items: center; gap: 8px; font: 400 13px var(--f-mono); color: rgba(18,27,38,.6); }

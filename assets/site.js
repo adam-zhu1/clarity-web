@@ -21,11 +21,11 @@
     if (switching || name === current) return; switching = true;
     var from = views[current], to = views[name];
     if (push) history.pushState({ v: name }, '', name === 'about' ? '/about' : '/');
-    if (from && !reduced) { var out = from.animate([{ opacity: 1, filter: 'blur(0)' }, { opacity: 0, filter: 'blur(6px)' }], { duration: 220, easing: 'cubic-bezier(.6,0,.9,.4)', fill: 'forwards' }); await out.finished; out.cancel(); }
+    if (from && !reduced) { var out = from.animate([{ opacity: 1, filter: 'blur(0)' }, { opacity: 0, filter: 'blur(6px)' }], { duration: 180, easing: 'cubic-bezier(.6,0,.9,.4)', fill: 'forwards' }); await out.finished; out.cancel(); }
     if (from) from.hidden = true;
     to.hidden = false; scrollTo(0, 0); current = name; setChrome(name);
     if (name === 'about') resetAbout();
-    if (!reduced) { var inn = to.animate([{ opacity: 0, filter: 'blur(6px)' }, { opacity: 1, filter: 'blur(0)' }], { duration: 420, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'both' }); await inn.finished; inn.cancel(); }
+    if (!reduced) { var inn = to.animate([{ opacity: 0, filter: 'blur(6px)' }, { opacity: 1, filter: 'blur(0)' }], { duration: 320, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'both' }); await inn.finished; inn.cancel(); }
     switching = false;
   }
   document.addEventListener('click', function (e) {
@@ -67,7 +67,7 @@
   /* 1 · the captures */
   player('capture', $('cap-steps'), 5, function (i) {
     document.querySelectorAll('#shots .shot').forEach(function (s, k) { s.classList.toggle('on', k === i); });
-  }, 2600);
+  }, 2000);
 
   /* 2 · the backend: twelve steps */
   var STEPS = [
@@ -95,7 +95,7 @@
     var pk = $('pk'); pk.setAttribute('class', 'pk');
     if (cur.pk && !reduced) { pk.style.setProperty('--path', 'path("' + flow.querySelector('#' + cur.pk[0]).getAttribute('d') + '")'); void pk.getBoundingClientRect(); pk.setAttribute('class', 'pk go ' + cur.pk[1]); }
     $('be-status-text').textContent = cur.st; $('be-status').classList.toggle('done', cur.st === 'Done');
-  }, 1500);
+  }, 1150);
 
   /* ============================================================ download */
   var dl = $('download'), going = false;
