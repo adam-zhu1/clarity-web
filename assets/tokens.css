@@ -40,8 +40,8 @@
   --app-shadow:   0 12px 32px rgba(0, 0, 0, 0.45);
 
   /* ---- type */
-  --f-sans:    "Archivo", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-  --f-display: "Fraunces", "Times New Roman", Georgia, serif;   /* wordmark and About headings; opsz 144 / SOFT 30 */
+  --f-sans:    "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --f-display: "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
   --f-mono:    "Fragment Mono", ui-monospace, "SF Mono", Menlo, monospace;
   --f-math:    "STIX Two Text", "Times New Roman", serif;
   --f-app:     -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;  /* inside app-window replicas only */

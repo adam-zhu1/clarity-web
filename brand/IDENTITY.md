@@ -1,6 +1,6 @@
 # Clarity identity standards
 
-**Version 3 · 12 September 2026.** (3: the site follows Apple's page rhythm; About alternates dark and light sections; Fragment Mono is confined to code and status text.) Font and colour for anyone building Clarity's UI, on the website or in the desktop app. Values are mirrored in [`assets/tokens.css`](../assets/tokens.css). When either changes, change both.
+**Version 3.1 · 12 September 2026.** (3.1: one family, Hanken Grotesk, replaces Fraunces and Archivo; a soft out-of-focus background with parallax is added.) Font and colour for anyone building Clarity's UI, on the website or in the desktop app. Values are mirrored in [`assets/tokens.css`](../assets/tokens.css). When either changes, change both.
 
 ---
 
@@ -10,17 +10,16 @@
 
 | Use | Face | Setting |
 |---|---|---|
-| Wordmark and About headings | **Fraunces**, weight 500, optical size 144 (wordmark) / 60 (headings), SOFT axis 30 | Wordmark 64–124 px, letter-spacing −0.02em, line-height 0.9. Headings 30–46 px. The serif is the identity's one warm element. |
+| Wordmark and headings | **Hanken Grotesk** 500 | Wordmark 56–104 px, letter-spacing −0.04em, line-height 0.95. Headings 32–52 px, −0.03em. |
 | Interface and body text | **Archivo**, width 100, weights 400 / 500 / 600 | Body 16 px / 1.5. Button labels 15 px, weight 600. |
-| Slogan, sentences under headlines, menu, notes | **Archivo** 400 | Slogan 18–24 px. Section sentences 17–21 px. Menu 13 px. Notes 13–14 px. |
+| Slogan, sentences, menu, notes, step lists | **Hanken Grotesk** 400 (500 for step titles) | Slogan 18–23 px. Sentences 17–21 px. Menu 13 px. Notes 13–14 px. |
 | Code, status text, hotkey keycaps, small captions in diagrams | **Fragment Mono**, weight 400 | 11–13 px. Never for headlines, slogans or menu items. |
-| Maths in sample problems | **STIX Two Text**, italic | Formulae shown as examples only. |
 | Inside pictures of the app's windows | System stack: `-apple-system, "SF Pro Text", system-ui` | 13 px / 1.5; the Spotlight input 15 px / 1.4; code `SF Mono` 12 px. The picture must match the real window. |
 
-All four web faces are on Google Fonts:
-`https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..500,0..100&family=Archivo:wdth,wght@62..125,400..600&family=Fragment+Mono&family=STIX+Two+Text:ital@1&display=swap`
+Both web faces are on Google Fonts:
+`https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=Fragment+Mono&display=swap`
 
-Fallback stacks: Fraunces → `"Times New Roman", Georgia, serif`. Archivo → `-apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif`. Fragment Mono → `ui-monospace, "SF Mono", Menlo, monospace`. STIX → `"Times New Roman", serif`.
+Fallback stacks: Hanken Grotesk → `-apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif`. Fragment Mono → `ui-monospace, "SF Mono", Menlo, monospace`. STIX → `"Times New Roman", serif`.
 
 ### Desktop app
 
@@ -30,13 +29,13 @@ The **system font only**, as today: `-apple-system, BlinkMacSystemFont, "SF Pro 
 
 - Weight 600 is the heaviest anywhere. No 700.
 - Hotkeys are always keycaps (<kbd>⌘</kbd><kbd>⇧</kbd><kbd>E</kbd>) in the mono face: 1 px border, 2 px bottom edge, 5 px radius. Never "Cmd-Shift-E" in prose.
-- Not to be used, because they read as template defaults: Inter, DM Sans, Space Grotesk, Manrope, Poppins, Geist, Instrument Sans, and any system font on the web.
+- Not to be used, because they read as template defaults: Inter, DM Sans, Space Grotesk, Manrope, Poppins, Geist, Instrument Sans, and any system font on the web. Retired after trial: Schibsted Grotesk, Archivo, Fraunces.
 
 ---
 
 ## Colour
 
-Sampled from the app icon. The home page is dark. About alternates dark and light sections, Apple's way; light sections use the paper set below and the darker mint for contrast.
+Sampled from the app icon. The home page is dark, over a background of three out-of-focus shapes in `#16303a`, `#1a2b3a` and translucent lens teal, blurred 70 px, that shift with the pointer (home) or scroll (About). About alternates dark and light sections, Apple's way; light sections use the paper set below and the darker mint for contrast.
 
 | Token | Value | Role |
 |---|---|---|
