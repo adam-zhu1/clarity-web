@@ -150,10 +150,14 @@
     e.preventDefault(); var k = dl.querySelector('kbd'); k.classList.add('down'); setTimeout(function () { k.classList.remove('down'); }, 120); go();
   });
 
+  /* ============================================================ about visuals play when seen */
+  var io = new IntersectionObserver(function (es) { es.forEach(function (e) { e.target.classList.toggle('play', e.isIntersecting); }); }, { threshold: .25 });
+  ['flow', 'stack'].forEach(function (id) { var el = $(id); if (el) io.observe(el); });
+
   /* ============================================================ boot */
   var start = viewFromPath(location.pathname);
   history.replaceState({ v: start }, '', location.pathname);
-  views[start].hidden = false; current = start; setChrome(start);
+  Object.keys(views).forEach(function (k) { views[k].hidden = k !== start; }); current = start; setChrome(start);
   fit(); load(PROBLEMS[which]);
   document.fonts.ready.then(function () {
     if (start === 'home') { html.classList.add('boot'); demo(); }

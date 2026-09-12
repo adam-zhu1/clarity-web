@@ -20,7 +20,7 @@
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..600&family=Fragment+Mono&family=STIX+Two+Text:ital@1&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..500,0..100&family=Archivo:wdth,wght@62..125,400..600&family=Fragment+Mono&family=STIX+Two+Text:ital@1&display=swap">
   <link rel="stylesheet" href="/assets/tokens.css">
   <link rel="stylesheet" href="/assets/site.css">
 </head>
@@ -90,48 +90,68 @@
 <!-- ============================================================ ABOUT -->
 <main class="view about" id="view-about" hidden>
   <article class="wrap">
-    <header class="block intro">
-      <span class="eyebrow rise">About</span>
-      <h2 class="h2 rise">Press one key on any problem on your screen. Read the explanation in seconds. Watch it animated a minute later.</h2>
-      <p class="lede rise">Clarity is a macOS menu-bar app for students. You're stuck on a derivative in a PDF, a recurrence on a slide, a binary search in your editor that returns the wrong index. Press <kbd>⌘</kbd><kbd>⇧</kbd><kbd>E</kbd>, drag a box around the problem, and a small floating window shows a written, step-by-step explanation. Then a short animation, made for that exact problem, plays in the same window. It isn't pulled from a library. A model writes the animation for your problem and Clarity renders it.</p>
-      <ol class="steps rise">
-        <li><h3>Press <kbd>⌘</kbd><kbd>⇧</kbd><kbd>E</kbd> and drag a box</h3><p>Around the problem, in whatever app it's in. PDF, slides, browser, editor. Esc cancels. Only what's inside the box leaves your Mac.</p></li>
-        <li><h3>Add context, or don't</h3><p>A Spotlight-style box slides in with a thumbnail. Type what's confusing you, or press ↓ to re-ask about a recent capture. Enter sends.</p></li>
-        <li><h3>Read, then watch</h3><p>The explanation appears in a floating window you can drag anywhere. About a minute later the animation plays beneath it. Ask the same problem twice and the second answer is instant.</p></li>
-      </ol>
-    </header>
 
-    <section class="block" id="install">
-      <span class="eyebrow rise">Install</span>
-      <h2 class="h2 rise">Two permissions and a key.</h2>
-      <p class="lede rise">Clarity lives in the menu bar with no dock icon. macOS asks for two permissions the first time, each followed by a relaunch.</p>
-      <ol class="isteps">
-        <li class="rise"><h3>Download and drag to Applications</h3><p>Open <span class="path">Clarity.dmg</span>, drag Clarity into Applications, and open it.</p></li>
-        <li class="rise"><h3>Let macOS open it</h3><p>Clarity isn't notarized yet, so macOS 15 blocks it once. Go to <span class="path">System Settings → Privacy &amp; Security</span>, scroll down, and click <span class="path">Open Anyway</span>.</p></li>
-        <li class="rise"><h3>Grant Screen Recording, then relaunch</h3><p>Needed for the region screenshot. Approve the prompt, then quit and reopen Clarity from the menu bar.</p></li>
-        <li class="rise"><h3>Press <kbd>⌘</kbd><kbd>⇧</kbd><kbd>E</kbd> once, grant Input Monitoring, relaunch</h3><p>Needed for the global key. Approve it, relaunch, and it's live.</p></li>
-        <li class="rise"><h3>Start the backend</h3><p>The coordinator and agent service run on the same Mac. Until a bundled installer ships, you run them from the repository.</p>
-          <div class="callout"><b>Follow the setup guide</b> for the full walkthrough: Docker and the <code>manim-worker</code> image, MinIO, MongoDB Atlas, API keys, then one command per service. <a href="https://github.com/s0hamjain/Clarity/blob/main/docs/SETUP.md">docs/SETUP.md →</a></div>
-<pre class="cmd"><b>git clone</b> https://github.com/s0hamjain/Clarity.git
-<b>cd</b> Clarity</pre></li>
-        <li class="rise"><h3>Capture something</h3><p><kbd>⌘</kbd><kbd>⇧</kbd><kbd>E</kbd>, drag a box around a problem, type any context, press Enter.</p></li>
+    <section class="block" id="use">
+      <span class="eyebrow rise">How you use it</span>
+      <h2 class="h2 rise">One key.</h2>
+      <ol class="flow rise" id="flow" aria-label="The four steps">
+        <li><div class="vis"><div class="k3"><kbd>⌘</kbd><kbd>⇧</kbd><kbd>E</kbd></div></div><h3>Press</h3></li>
+        <li><div class="vis"><div class="mdoc"><i></i><i></i><i></i><span class="msel"></span></div></div><h3>Drag a box</h3></li>
+        <li><div class="vis"><div class="mspot"><span class="mthumb"></span><span class="mtext"></span></div></div><h3>Ask, or don't</h3></li>
+        <li><div class="vis"><div class="mres"><i></i><i></i><i></i><span class="mvid"></span></div></div><h3>Read. Then watch.</h3></li>
       </ol>
-      <div class="req rise" aria-label="Requirements">
-        <div><span>Requires</span><span>macOS 14 or later, Apple Silicon</span></div>
-        <div><span>Backend</span><span>Docker Desktop, plus API keys for Gemini, Anthropic and Voyage AI</span></div>
-        <div><span>Accounts</span><span>None. Recents stay on your Mac.</span></div>
+      <p class="note rise">Words in 8 seconds. Video in a minute.</p>
+    </section>
+
+    <section class="block" id="inside">
+      <span class="eyebrow rise">What it's built with</span>
+      <h2 class="h2 rise">On your Mac, and in the cloud.</h2>
+      <div class="stack rise" id="stack">
+        <div class="col">
+          <h3>On your Mac</h3>
+          <ul>
+            <li><i class="ico" style="--i:url(/assets/icons/python.svg)"></i><b>Python</b><span>the menu-bar app</span></li>
+            <li><i class="ico" style="--i:url(/assets/icons/go.svg)"></i><b>Go</b><span>coordinates each request</span></li>
+            <li><i class="ico" style="--i:url(/assets/icons/fastapi.svg)"></i><b>FastAPI</b><span>the agent service</span></li>
+            <li><i class="ico" style="--i:url(/assets/icons/langchain.svg)"></i><b>LangGraph</b><span>the agents</span></li>
+            <li><i class="ico" style="--i:url(/assets/icons/docker.svg)"></i><b>Docker</b><span>sandboxed rendering</span></li>
+            <li><i class="ico txt">M</i><b>Manim</b><span>draws the animation</span></li>
+            <li><i class="ico" style="--i:url(/assets/icons/ffmpeg.svg)"></i><b>ffmpeg</b><span>joins the scenes</span></li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>In the cloud</h3>
+          <ul>
+            <li><i class="ico" style="--i:url(/assets/icons/googlegemini.svg)"></i><b>Gemini</b><span>reads and explains</span></li>
+            <li><i class="ico" style="--i:url(/assets/icons/anthropic.svg)"></i><b>Claude</b><span>writes the animation code</span></li>
+            <li><i class="ico txt">V</i><b>Voyage AI</b><span>finds similar examples</span></li>
+            <li><i class="ico" style="--i:url(/assets/icons/mongodb.svg)"></i><b>MongoDB Atlas</b><span>jobs, cache, examples</span></li>
+            <li><i class="ico" style="--i:url(/assets/icons/amazons3.svg)"></i><b>S3</b><span>finished videos</span></li>
+          </ul>
+        </div>
       </div>
     </section>
 
+    <section class="block" id="install">
+      <span class="eyebrow rise">Install</span>
+      <h2 class="h2 rise">Four steps.</h2>
+      <ol class="setup rise">
+        <li><span class="ic">⤓</span><h3>Download</h3><p>Clarity.dmg → Applications</p></li>
+        <li><span class="ic">⚙</span><h3>Open Anyway</h3><p>Privacy &amp; Security, once</p></li>
+        <li><span class="ic">◉</span><h3>Allow</h3><p>Screen Recording · Input Monitoring</p></li>
+        <li><span class="ic"><kbd>⌘</kbd><kbd>⇧</kbd><kbd>E</kbd></span><h3>Press</h3><p>You're in.</p></li>
+      </ol>
+      <p class="note rise">macOS 14+ · Apple Silicon · <a href="https://github.com/s0hamjain/Clarity/blob/main/docs/SETUP.md">backend setup →</a></p>
+    </section>
+
     <section class="block source rise" id="source">
-      <span class="eyebrow">Source</span>
       <a class="repo" href="https://github.com/s0hamjain/Clarity"><span class="ul">Open source on GitHub</span><span class="arrow" aria-hidden="true">→</span></a>
       <p class="sub">github.com/s0hamjain/Clarity</p>
     </section>
 
     <footer class="foot">
       <span>Clarity</span>
-      <nav aria-label="Footer"><a href="/" data-nav="home">Home</a><a href="https://github.com/s0hamjain/Clarity/releases">Releases</a><a href="https://github.com/s0hamjain/Clarity/blob/main/docs/SETUP.md">Setup guide</a></nav>
+      <nav aria-label="Footer"><a href="/" data-nav="home">Home</a><a href="https://github.com/s0hamjain/Clarity/releases">Releases</a></nav>
     </footer>
   </article>
 </main>

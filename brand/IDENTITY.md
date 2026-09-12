@@ -1,6 +1,6 @@
 # Clarity identity standards
 
-**Version 2 · 12 September 2026.** Font and colour for anyone building Clarity's UI, on the website or in the desktop app. Values are mirrored in [`assets/tokens.css`](../assets/tokens.css). When either changes, change both.
+**Version 2.1 · 12 September 2026.** (2.1: wordmark and headings moved from Archivo to Fraunces.) Font and colour for anyone building Clarity's UI, on the website or in the desktop app. Values are mirrored in [`assets/tokens.css`](../assets/tokens.css). When either changes, change both.
 
 ---
 
@@ -10,16 +10,16 @@
 
 | Use | Face | Setting |
 |---|---|---|
-| Wordmark | **Archivo**, width 122 (expanded), weight 500 | 60–112 px, letter-spacing −0.02em, line-height 0.92. Only the wordmark is set wide. |
+| Wordmark and About headings | **Fraunces**, weight 500, optical size 144 (wordmark) / 60 (headings), SOFT axis 30 | Wordmark 64–124 px, letter-spacing −0.02em, line-height 0.9. Headings 30–46 px. The serif is the identity's one warm element. |
 | Interface and body text | **Archivo**, width 100, weights 400 / 500 / 600 | Body 16 px / 1.5. Button labels 15 px, weight 600. |
 | Slogan, menu links, fine print, hotkeys, labels, code | **Fragment Mono**, weight 400 | Slogan 18–22 px. Menu links 13 px. Fine print 12.5 px. Small labels 12 px uppercase with +0.08em tracking. |
 | Maths in sample problems | **STIX Two Text**, italic | Formulae shown as examples only. |
 | Inside pictures of the app's windows | System stack: `-apple-system, "SF Pro Text", system-ui` | 13 px / 1.5; the Spotlight input 15 px / 1.4; code `SF Mono` 12 px. The picture must match the real window. |
 
-All three web faces are on Google Fonts:
-`https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..600&family=Fragment+Mono&family=STIX+Two+Text:ital@1&display=swap`
+All four web faces are on Google Fonts:
+`https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..500,0..100&family=Archivo:wdth,wght@62..125,400..600&family=Fragment+Mono&family=STIX+Two+Text:ital@1&display=swap`
 
-Fallback stacks: Archivo → `-apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif`. Fragment Mono → `ui-monospace, "SF Mono", Menlo, monospace`. STIX → `"Times New Roman", serif`.
+Fallback stacks: Fraunces → `"Times New Roman", Georgia, serif`. Archivo → `-apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif`. Fragment Mono → `ui-monospace, "SF Mono", Menlo, monospace`. STIX → `"Times New Roman", serif`.
 
 ### Desktop app
 

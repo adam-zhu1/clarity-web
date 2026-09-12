@@ -36,14 +36,14 @@
 
   /* ---- type */
   --f-sans:    "Archivo", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-  --f-display: "Archivo", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --f-display: "Fraunces", "Times New Roman", Georgia, serif;   /* wordmark and About headings; opsz 144 / SOFT 30 */
   --f-mono:    "Fragment Mono", ui-monospace, "SF Mono", Menlo, monospace;
   --f-math:    "STIX Two Text", "Times New Roman", serif;
   --f-app:     -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;  /* inside app-window replicas only */
-  --display-stretch: 122%;             /* the wordmark is Archivo at width 122 */
+  --display-stretch: 100%;
   --display-weight: 500;
   --display-track: -0.02em;
-  --fs-wordmark: clamp(60px, 7.8vw, 112px);
+  --fs-wordmark: clamp(64px, 8.4vw, 124px);
   --fs-slogan:   clamp(18px, 1.5vw, 22px);   /* Fragment Mono 400 */
   --fs-body:     16px;
   --fs-small:    14px;
