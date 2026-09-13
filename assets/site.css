@@ -56,6 +56,9 @@ kbd { font: 400 .78em/1 var(--f-mono); padding: .3em .45em; border: 1px solid cu
 @media (max-width: 860px) { .hero { height: auto; min-height: 100dvh; grid-template-columns: 1fr; align-content: start; padding-top: 84px; gap: 28px; } body.locked { overflow: auto; } }
 
 /* ---- boot: the word focuses in alone, then the sentence, the button, the film. Every full load. */
+/* before boot (html.pre is set in the markup, so this applies on the first paint): everything the boot
+   animates is hidden until the fonts are ready and site.js swaps .pre for .boot. No flash of the finished page. */
+.pre :is(.wordmark, .slogan, .cta, .firstrun, .film, .bar) { opacity: 0; }
 .boot .wordmark { animation: focus-word 800ms var(--ease-out) 0ms both; will-change: filter, transform, opacity; }
 .boot .slogan { animation: focus 420ms var(--ease-out) 460ms both; }
 .boot .cta { animation: focus 400ms var(--ease-out) 580ms both; }

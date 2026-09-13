@@ -132,5 +132,9 @@
   history.replaceState({ v: start }, '', location.pathname);
   Object.keys(views).forEach(function (k) { views[k].hidden = k !== start; });
   current = start; setChrome(start);
-  document.fonts.ready.then(function () { html.classList.add('boot'); });
+  /* swap .pre (set in the markup) for .boot once the fonts are in, or after 1.5 s if they never arrive */
+  var booted = false;
+  function boot() { if (booted) return; booted = true; html.classList.remove('pre'); html.classList.add('boot'); }
+  document.fonts.ready.then(boot);
+  setTimeout(boot, 1500);
 })();
